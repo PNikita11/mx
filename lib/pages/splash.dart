@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:the_metabolix_app/utils/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -49,6 +50,11 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _animationController.forward();
+
+    // Delayed navigation to the login page after 4 seconds
+    Future.delayed(const Duration(seconds: 4), () {
+      Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+    });
   }
 
   @override
