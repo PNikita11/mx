@@ -53,6 +53,10 @@ class _MyLoginState extends State<MyLogin> {
                                 fontSize: 18, // Increase font size
                               ), // Set input text color and font size
                               decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: Colors.white,
+                                ), // Add email icon
                                 hintText: "Email",
                                 hintStyle: TextStyle(
                                   color: Colors.white,
@@ -88,6 +92,10 @@ class _MyLoginState extends State<MyLogin> {
                               ), // Set input text color and font size
                               obscureText: true,
                               decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Colors.white,
+                                ), // Add lock icon
                                 hintText: "Password",
                                 hintStyle: TextStyle(
                                   color: Colors.white,
@@ -107,11 +115,12 @@ class _MyLoginState extends State<MyLogin> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                 'Sign in',
                                 style: TextStyle(
                                   fontSize: 32, // Increase font size
                                   fontWeight: FontWeight.w700,
+                                  color: Colors.black, // Set text color to white
                                 ),
                               ),
                               CircleAvatar(
@@ -129,9 +138,9 @@ class _MyLoginState extends State<MyLogin> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              TextButton(
+                              ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, 'register');
+                                  Navigator.pushNamed(context, '/register' );
                                 },
                                 style: const ButtonStyle(),
                                 child: const Text(
@@ -139,7 +148,7 @@ class _MyLoginState extends State<MyLogin> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Color(0xff000000),
+                                    color: Colors.black, // Set text color to white
                                     fontSize: 20, // Increase font size
                                   ),
                                 ),
@@ -150,7 +159,7 @@ class _MyLoginState extends State<MyLogin> {
                                   'Forgot Password',
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Color(0xff000000),
+                                    color: Colors.black, // Set text color to white
                                     fontSize: 20, // Increase font size
                                   ),
                                 ),
