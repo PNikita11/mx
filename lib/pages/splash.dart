@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     // Delayed navigation to the login page after 4 seconds
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 8), () {
       Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
     });
   }
