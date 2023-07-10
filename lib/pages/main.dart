@@ -73,3 +73,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+
+//By Nikita
