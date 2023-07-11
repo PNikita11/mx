@@ -39,11 +39,7 @@ dependencies:
   google_fonts: ^5.1.0
   animations: ^2.0.7
   loading_animation_widget: ^1.2.0+4
-<<<<<<< HEAD
-  flutter_svg: ^2.0.7
-=======
   flutter_svg: ^0.17.4
->>>>>>> ffd10d2c43900840256f644b293a34b07f3ebe2a
   scroll_snap_list: ^0.9.1
 
 
