@@ -23,7 +23,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  List<int> data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  List<int> data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   int currentIndex = 0;
 
   Widget _buildItemList(BuildContext context, int index) {
@@ -95,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Align(
                 alignment: Alignment.center,
                 child: PageView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
                     setState(() {
                       currentIndex = index;
@@ -104,6 +105,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   itemBuilder: (context, index) {
                     return _buildItemList(context, index);
                   },
+                  controller: PageController(
+                    initialPage: currentIndex,
+                  ),
                 ),
               ),
             ),
@@ -114,9 +118,9 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_circle_left_outlined),
+                  icon: Icon(Icons.arrow_circle_right),
                   color: Colors.purple,
-                  iconSize: 50,
+                  iconSize: 60,
                   onPressed: () {
                     setState(() {
                       currentIndex = currentIndex > 0 ? currentIndex - 1 : 0;
@@ -124,9 +128,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.arrow_circle_right_outlined),
+                  icon: Icon(Icons.arrow_circle_left),
                   color: Colors.purple,
-                  iconSize: 50,
+                  iconSize: 60,
                   onPressed: () {
                     setState(() {
                       currentIndex = currentIndex < data.length - 1
