@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:the_metabolix_app/utils/routes.dart';
 import 'package:the_metabolix_app/pages/splash.dart';
 import 'package:the_metabolix_app/pages/login.dart';
+import 'package:the_metabolix_app/pages/register.dart';
+import 'package:the_metabolix_app/pages/homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,9 +17,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => SplashScreen(),
+        "/": (context) => HomeScreen(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
+        MyRoutes.registerRoute: (context) => RegisterPage(),
       },
     );
   }

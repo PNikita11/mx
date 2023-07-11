@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
-    Key key,
-  }) : super(key: key);
+    required Key key,
+  }) : super(key: key ?? const ValueKey<String>('search_bar_key'));
 
   @override
   Widget build(BuildContext context) {
