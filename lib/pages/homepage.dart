@@ -148,6 +148,7 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 36.0,
@@ -159,12 +160,12 @@ class _HomeState extends State<Home> {
                   selected: true,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
-                      Radius.circular(16.0),
+                      Radius.circular(20.0),
                     ),
                   ),
                   selectedTileColor: Colors.indigoAccent.shade100,
                   title: Text(
-                    "Welcome Back",
+                    "Rajesh Singh",
                     style: Theme.of(context).textTheme.subtitle1!.merge(
                       const TextStyle(
                         fontWeight: FontWeight.w700,
@@ -173,7 +174,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   subtitle: Text(
-                    "A Greet welcome to you all.",
+                    "MetaboliX has provided me with an experience of.....",
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   trailing: PopUpMen(
@@ -220,6 +221,17 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  "Good Evening, Omkar",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 200,
                 child: PageView.builder(
@@ -251,7 +263,11 @@ class _HomeState extends State<Home> {
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
-                              right: 8, left: 8, top: 24, bottom: 12),
+                            right: 8,
+                            left: 8,
+                            top: 24,
+                            bottom: 12,
+                          ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24.0),
                             color: Colors.amberAccent,
@@ -374,134 +390,57 @@ class GridB extends StatefulWidget {
 }
 
 class _GridBState extends State<GridB> {
-  final List<Map<String, dynamic>> gridMap = [
-    {
-      "title": "white sneaker with adidas logo",
-      "price": "\$255",
-      "images":
-      "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=725&q=80",
-    },
-    {
-      "title": "Black Jeans with blue stripes",
-      "price": "\$245",
-      "images":
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-    },
-    {
-      "title": "Red shoes with black stripes",
-      "price": "\$155",
-      "images":
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c2hvZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      "title": "Gamma shoes with beta brand.",
-      "price": "\$275",
-      "images":
-      "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-    },
-    {
-      "title": "Alpha t-shirt for alpha testers.",
-      "price": "\$25",
-      "images":
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-    },
-    {
-      "title": "Beta jeans for beta testers",
-      "price": "\$27",
-      "images":
-      "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-    },
-    {
-      "title": "V&V  model white t shirts.",
-      "price": "\$55",
-      "images":
-      "https://images.unsplash.com/photo-1554568218-0f1715e72254?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-    }
-  ];
-
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
-        mainAxisExtent: 310,
+        childAspectRatio: 1, // Set equal width and height
       ),
-      itemCount: gridMap.length,
+      itemCount: 4,
       itemBuilder: (_, index) {
+        List<String> imagePaths = [
+          'assets/icons/dietInery icon.png',
+          'assets/icons/mealMap icon.png',
+          'assets/icons/metaFit icon.png',
+          'assets/icons/mySculpt icon.png',
+        ];
+        List<String> labels = [
+          'dietInery',
+          'mealMap',
+          'metaFit',
+          'mySculpt',
+        ];
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              16.0,
-            ),
+            borderRadius: BorderRadius.circular(16.0),
             color: Colors.amberAccent.shade100,
+            border: Border.all(color: Colors.blue, width: 2.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  imagePaths[index],
+                  height: 80,
+                  width: 80,
+                  fit: BoxFit.contain,
                 ),
-                child: Image.network(
-                  "${gridMap.elementAt(index)['images']}",
-                  height: 170,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                const SizedBox(height: 8.0),
+                Text(
+                  labels[index],
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${gridMap.elementAt(index)['title']}",
-                      style: Theme.of(context).textTheme.subtitle1!.merge(
-                        const TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "${gridMap.elementAt(index)['price']}",
-                      style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            CupertinoIcons.heart,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            CupertinoIcons.cart,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
