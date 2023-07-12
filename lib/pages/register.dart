@@ -48,12 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
             scale: scaleFactor,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2.0,
-                ),
+                color: Colors.transparent,
               ),
               child: Center(
                 child: Container(
@@ -68,9 +63,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.purple.withOpacity(0.3),
                         spreadRadius: 5,
-                        blurRadius: 10,
+                        blurRadius: 20,
                         offset: Offset(0, 0),
                       ),
                     ],
@@ -90,57 +85,49 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Column(
         children: [
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 16.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: PageView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  onPageChanged: (index) {
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return _buildItemList(context, index);
-                  },
-                  controller: PageController(
-                    initialPage: currentIndex,
-                  ),
+            child: Align(
+              alignment: Alignment.center,
+              child: PageView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                onPageChanged: (index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return _buildItemList(context, index);
+                },
+                controller: PageController(
+                  initialPage: currentIndex,
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_circle_right),
-                  color: Colors.purple,
-                  iconSize: 60,
-                  onPressed: () {
-                    setState(() {
-                      currentIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.arrow_circle_left),
-                  color: Colors.purple,
-                  iconSize: 60,
-                  onPressed: () {
-                    setState(() {
-                      currentIndex = currentIndex < data.length - 1
-                          ? currentIndex + 1
-                          : currentIndex;
-                    });
-                  },
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_left_outlined),
+                color: Colors.purple,
+                iconSize: 60,
+                onPressed: () {
+                  setState(() {
+                    currentIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+                  });
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_right_outlined),
+                color: Colors.purple,
+                iconSize: 60,
+                onPressed: () {
+                  setState(() {
+                    currentIndex = currentIndex < data.length - 1 ? currentIndex + 1 : currentIndex;
+                  });
+                },
+              ),
+            ],
           ),
         ],
       ),
