@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const Home(),
+      routes: {
+        '/mySculpt': (context) => const MySculptPage(),
+      },
     );
   }
 }
@@ -46,7 +49,7 @@ class _HomeState extends State<Home> {
   ScrollController _scrollController = ScrollController();
   int pageNo = 0;
 
-  Timer? carasouelTmer;
+  Timer? carouselTimer;
 
   Timer getTimer() {
     return Timer.periodic(const Duration(seconds: 3), (timer) {
@@ -65,15 +68,17 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     pageController = PageController(initialPage: 0, viewportFraction: 0.85);
-    carasouelTmer = getTimer();
+    carouselTimer = getTimer();
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        showBtmAppBr = false;
-        setState(() {});
+        setState(() {
+          showBtmAppBr = false;
+        });
       } else {
-        showBtmAppBr = true;
-        setState(() {});
+        setState(() {
+          showBtmAppBr = true;
+        });
       }
     });
     super.initState();
@@ -91,29 +96,84 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // Set app bar color to white
-        leading: IconButton(
-          icon: Icon(
-            Icons.menu,
-            color: Colors.black, // Set the color of the menu icon to black
+        backgroundColor: Colors.white, // Set app bar color to dark silver
+        // Remove the existing menu bar (three horizontal lines) in the app bar
+        titleSpacing: 0,
+        toolbarHeight: 56,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/meta logo (1).png',
+                height: 50,
+                width: 200,
+                alignment: AlignmentDirectional.centerStart,
+                fit: BoxFit.contain, // Ensure the image fits within the app bar
+              ),
+              const SizedBox(width: 16.0), // Add padding to the right of the logo
+            ],
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the image horizontally
-          children: [
-            Image.asset(
-              'assets/images/metabolix splash screen.jpg',
-              height: 60,
-              width: 300,
-              fit: BoxFit.contain, // Ensure the image fits within the app bar
+        actions: [
+          // Add a circular icon of profile image at the rightmost part of the app bar
+          GestureDetector(
+            onTap: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0), // Add padding to the right of the CircleAvatar
+              child: CircleAvatar(
+                backgroundImage: const NetworkImage(
+                  'https://images.unsplash.com/photo-1644982647869-e1337f992828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
+                ),
+                child: const PopUpMen(
+                  menuList: [
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.person,
+                        ),
+                        title: Text("My Profile"),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.bag,
+                        ),
+                        title: Text("My Bag"),
+                      ),
+                    ),
+                    PopupMenuDivider(),
+                    PopupMenuItem(
+                      child: Text("Settings"),
+                    ),
+                    PopupMenuItem(
+                      child: Text("About Us"),
+                    ),
+                    PopupMenuDivider(),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.logout,
+                        ),
+                        title: Text("Log Out"),
+                      ),
+                    ),
+                  ],
+                  icon: CircleAvatar(
+                    backgroundImage: const NetworkImage(
+                      'https://images.unsplash.com/photo-1644982647869-e1337f992828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      drawer: Drawer(
+      endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -154,6 +214,17 @@ class _HomeState extends State<Home> {
                 height: 36.0,
               ),
               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  "Good Evening, Omkar!",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: ListTile(
                   onTap: () {},
@@ -177,59 +248,7 @@ class _HomeState extends State<Home> {
                     "MetaboliX has provided me with an experience of.....",
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
-                  trailing: PopUpMen(
-                    menuList: const [
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: Icon(
-                            CupertinoIcons.person,
-                          ),
-                          title: Text("My Profile"),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: Icon(
-                            CupertinoIcons.bag,
-                          ),
-                          title: Text("My Bag"),
-                        ),
-                      ),
-                      PopupMenuDivider(),
-                      PopupMenuItem(
-                        child: Text("Settings"),
-                      ),
-                      PopupMenuItem(
-                        child: Text("About Us"),
-                      ),
-                      PopupMenuDivider(),
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.logout,
-                          ),
-                          title: Text("Log Out"),
-                        ),
-                      ),
-                    ],
-                    icon: CircleAvatar(
-                      backgroundImage: const NetworkImage(
-                        'https://images.unsplash.com/photo-1644982647869-e1337f992828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
-                      ),
-                      child: Container(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Text(
-                  "Good Evening, Omkar",
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  trailing: const SizedBox(),
                 ),
               ),
               SizedBox(
@@ -250,16 +269,17 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Hello you tapped at ${index + 1} "),
+                              content:
+                              Text("Hello you tapped at ${index + 1} "),
                             ),
                           );
                         },
                         onPanDown: (d) {
-                          carasouelTmer?.cancel();
-                          carasouelTmer = null;
+                          carouselTimer?.cancel();
+                          carouselTimer = null;
                         },
                         onPanCancel: () {
-                          carasouelTmer = getTimer();
+                          carouselTimer = getTimer();
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
@@ -395,7 +415,7 @@ class _GridBState extends State<GridB> {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
@@ -415,35 +435,58 @@ class _GridBState extends State<GridB> {
           'metaFit',
           'mySculpt',
         ];
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.0),
-            color: Colors.amberAccent.shade100,
-            border: Border.all(color: Colors.blue, width: 2.0),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  imagePaths[index],
-                  height: 80,
-                  width: 80,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  labels[index],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () {
+            if (index == 3) {
+              Navigator.pushNamed(context, '/mySculpt');
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.0),
+              color: Colors.amberAccent.shade100,
+              border: Border.all(color: Colors.blue, width: 2.0),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    imagePaths[index],
+                    height: 80,
+                    width: 80,
+                    fit: BoxFit.contain,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                  const SizedBox(height: 8.0),
+                  Text(
+                    labels[index],
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class MySculptPage extends StatelessWidget {
+  const MySculptPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Sculpt'),
+      ),
+      body: Center(
+        child: const Text('This is the My Sculpt page'),
+      ),
     );
   }
 }

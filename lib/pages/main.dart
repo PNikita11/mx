@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:the_metabolix_app/pages/mySculpt/firstPage.dart';
 import 'package:the_metabolix_app/utils/routes.dart';
-import 'package:the_metabolix_app/pages/splash.dart';
-import 'package:the_metabolix_app/pages/login.dart';
-import 'package:the_metabolix_app/pages/register.dart';
-import 'package:the_metabolix_app/pages/homepage.dart';
+import 'package:the_metabolix_app/pages/screens/splash.dart';
+import 'package:the_metabolix_app/pages/screens/login.dart';
+import 'package:the_metabolix_app/pages/screens/register.dart';
+import 'package:the_metabolix_app/pages/screens/homepage.dart';
 
 
 void main() {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
         MyRoutes.homeRoute: (context) => Home(),
+        MyRoutes.mySculptRoute: (context) => DetailsPage(),
       },
     );
   }
