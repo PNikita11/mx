@@ -96,22 +96,29 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // Set app bar color to dark silver
+        backgroundColor: Colors.black87,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(50.0),
+          ),
+        ),
         // Remove the existing menu bar (three horizontal lines) in the app bar
         titleSpacing: 0,
-        toolbarHeight: 56,
+        toolbarHeight: 70, // Increased app bar height
         title: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
+          padding: const EdgeInsets.only(left: 25.0),
           child: Row(
             children: [
-              Image.asset(
-                'assets/images/meta logo (1).png',
-                height: 50,
-                width: 200,
-                alignment: AlignmentDirectional.centerStart,
-                fit: BoxFit.contain, // Ensure the image fits within the app bar
+              Padding(
+                padding: const EdgeInsets.only(right: 35.0),
+                child: Image.asset(
+                  'assets/images/meta logo (1).png',
+                  height: 50,
+                  width: 200,
+                  alignment: AlignmentDirectional.centerStart,
+                  fit: BoxFit.contain, // Ensure the image fits within the app bar
+                ),
               ),
-              const SizedBox(width: 16.0), // Add padding to the right of the logo
             ],
           ),
         ),
@@ -211,7 +218,7 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 36.0,
+                height: 10.0,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -284,9 +291,9 @@ class _HomeState extends State<Home> {
                         child: Container(
                           margin: const EdgeInsets.only(
                             right: 8,
-                            left: 8,
-                            top: 24,
-                            bottom: 12,
+                            left: 2,
+                            top: 8,
+                            bottom: 2,
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24.0),
@@ -300,7 +307,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(
-                height: 12.0,
+                height: 10.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

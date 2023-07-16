@@ -23,12 +23,29 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           size: 16,
         ),
       ),
-      title: const Text(
-        'Activity',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.asset(
+                'assets/images/login.png',
+                height: appBar.preferredSize.height - 8,
+                width: appBar.preferredSize.height - 0,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const Text(
+              'mySculpt',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
+            ),
+          ],
         ),
       ),
       centerTitle: true,

@@ -14,9 +14,15 @@ class Info extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: const [
-                Stats(value: '345', unit: 'kcal', label: 'Calories'),
-                Stats(value: '3.6', unit: 'km', label: 'Distance'),
-                Stats(value: '1.5', unit: 'hr', label: 'Hours'),
+                _StatsBox(
+                  child: Stats(value: '345', unit: 'kcal', label: 'Calories'),
+                ),
+                _StatsBox(
+                  child: Stats(value: '3.6', unit: 'km', label: 'Distance'),
+                ),
+                _StatsBox(
+                  child: Stats(value: '1.5', unit: 'hr', label: 'Hours'),
+                ),
               ],
             ),
             const SizedBox(height: 10), // Add a little space here
@@ -61,7 +67,7 @@ class Info extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.blue,
+                color: Colors.blueAccent,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.3),
@@ -91,6 +97,37 @@ class Info extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _StatsBox extends StatelessWidget {
+  final Widget child;
+
+  const _StatsBox({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        border: Border.all(
+          color: Colors.black.withOpacity(0.8),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black54.withOpacity(0.3),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(child: child),
     );
   }
 }
