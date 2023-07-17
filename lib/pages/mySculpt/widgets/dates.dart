@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:the_metabolix_app/pages/helper.dart';
 
 class Dates extends StatelessWidget {
@@ -8,7 +9,6 @@ class Dates extends StatelessWidget {
   Widget build(BuildContext context) {
     List<DateBox> dateBoxes = [];
 
-    // DateTime date = DateTime.parse('2021-11-08');
     DateTime date = DateTime.now().subtract(const Duration(days: 3));
 
     for (int i = 0; i < 6; i++) {
@@ -16,24 +16,53 @@ class Dates extends StatelessWidget {
       date = date.add(const Duration(days: 1));
     }
 
+    DateTime currentDate = DateTime.now();
+    String formattedDate = DateFormat('d MMMM, yyyy').format(currentDate);
+
     return Column(
       children: [
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.blue,
+            borderRadius: BorderRadius.circular(1),
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 blurRadius: 5,
-                spreadRadius: 2,
+                spreadRadius: 10,
                 offset: Offset(0, 3),
               ),
             ],
           ),
           padding: const EdgeInsets.all(10),
           child: QuoteBox(),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 5,
+                spreadRadius: 8,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(10),
+          child: Text(
+            formattedDate,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(height: 10),
         Padding(
@@ -77,7 +106,7 @@ class DateBox extends StatelessWidget {
         ),
       ),
       child: DefaultTextStyle.merge(
-        style: active ? const TextStyle(color: Colors.white) : null,
+        style: active ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold) : null,
         child: Column(
           children: [
             Container(
@@ -96,7 +125,7 @@ class DateBox extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -118,7 +147,7 @@ class DateBox extends StatelessWidget {
 
 class QuoteBox extends StatelessWidget {
   final List<String> quotes = [
-    "He who has health has hope and he who has hope has everything",
+    "He who has health has hope....He who has hope has everything",
     "Nothing is impossible. The word itself says I'm possible.",
     "Your body will be around a lot longer than that expensive handbag. Invest in yourself.",
     "Reading is to the mind what exercise is to the body",
@@ -134,9 +163,10 @@ class QuoteBox extends StatelessWidget {
     String quote = quotes[quoteIndex];
 
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
+        color: Colors.yellow,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -146,13 +176,11 @@ class QuoteBox extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Text(
-          quote,
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.center,
-        ),
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        quote,
+        style: const TextStyle(fontSize: 20, color: Colors.black),
+        textAlign: TextAlign.center,
       ),
     );
   }

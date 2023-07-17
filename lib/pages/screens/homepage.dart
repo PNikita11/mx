@@ -241,7 +241,7 @@ class _HomeState extends State<Home> {
                       Radius.circular(20.0),
                     ),
                   ),
-                  selectedTileColor: Colors.indigoAccent.shade100,
+                  selectedTileColor: Colors.indigo,
                   title: Text(
                     "Rajesh Singh",
                     style: Theme.of(context).textTheme.subtitle1!.merge(

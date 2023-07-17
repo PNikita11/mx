@@ -8,14 +8,14 @@ class Steps extends StatelessWidget {
   Widget build(BuildContext context) {
     String steps = formatNumber(randBetween(50, 90));
     return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.symmetric(vertical: 2),
       child: Column(
         children: [
           Text(
-            'Your Monthly Progress',
+            'Your Monthly Progress...',
             style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w900,
+              fontSize: 25,
+              fontWeight: FontWeight.w700,
             ),
           ),
           Text(
@@ -23,7 +23,7 @@ class Steps extends StatelessWidget {
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.w500,
-              height: 2,
+              height: 1.4,
             ),
           ),
         ],

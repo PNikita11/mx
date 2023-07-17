@@ -3,5 +3,7 @@ class MyRoutes {
   static String loginRoute = "/login";
   static String homeRoute = "/home";
   static String registerRoute = "/register";
-  static String mySculptRoute = "/mySculpt";
+  static String mySculptFPRoute = "/mySculptFP";
+  static String mySculptSPRoute = "/mySculptSP";
+
 }

@@ -1,7 +1,54 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
-class Info extends StatelessWidget {
+class Info extends StatefulWidget {
   const Info({Key? key}) : super(key: key);
+
+  @override
+  _InfoState createState() => _InfoState();
+}
+
+class _InfoState extends State<Info> {
+  late Timer _timer;
+  int _currentIndex = 0;
+  List<Map<String, String>> _statsData = [
+    {'value': '345', 'unit': 'kcal', 'label': 'Calories'},
+    {'value': '3.6', 'unit': 'km', 'label': 'Distance'},
+    {'value': '1.5', 'unit': 'hr', 'label': 'Hours'},
+    {'value': '188', 'unit': 'in', 'label': 'Hip Circumference'},
+    {'value': '200', 'unit': 'cm', 'label': 'Thigh Circumference'},
+    {'value': '80', 'unit': 'kg', 'label': 'Body Weight'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      setState(() {
+        _currentIndex = (_currentIndex + 2) % _statsData.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  Widget _buildStatsBox(int index) {
+    final Map<String, String> stats = _statsData[index];
+    return _StatsBox(
+      child: Stats(
+        value: stats['value']!,
+        unit: stats['unit']!,
+        label: stats['label']!,
+        isCenterAligned:
+        stats['label'] == 'Hip Circumference' ||
+            stats['label'] == 'Thigh Circumference',
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,19 +60,13 @@ class Info extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                _StatsBox(
-                  child: Stats(value: '345', unit: 'kcal', label: 'Calories'),
-                ),
-                _StatsBox(
-                  child: Stats(value: '3.6', unit: 'km', label: 'Distance'),
-                ),
-                _StatsBox(
-                  child: Stats(value: '1.5', unit: 'hr', label: 'Hours'),
-                ),
+              children: [
+                _buildStatsBox((_currentIndex) % _statsData.length),
+                _buildStatsBox((_currentIndex + 1) % _statsData.length),
+                _buildStatsBox((_currentIndex + 2) % _statsData.length),
               ],
             ),
-            const SizedBox(height: 10), // Add a little space here
+            const SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -67,7 +108,7 @@ class Info extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.blueAccent,
+                color: Colors.indigoAccent,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.3),
@@ -77,21 +118,25 @@ class Info extends StatelessWidget {
                   ),
                 ],
               ),
-              child: TextButton(
-                onPressed: () {
-                  // Add your track button's onPressed logic here
-                },
-                style: TextButton.styleFrom(
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(30),
-                  primary: Colors.white,
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey.withOpacity(0.3),
                 ),
-                child: const Text('Track'),
+                child: TextButton(
+                  onPressed: () {
+                    // Add your track button's onPressed logic here
+                  },
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    textStyle: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text('Track'),
+                ),
               ),
             ),
           ),
@@ -136,18 +181,22 @@ class Stats extends StatelessWidget {
   final String value;
   final String unit;
   final String label;
+  final bool isCenterAligned;
 
   const Stats({
     Key? key,
     required this.value,
     required this.unit,
     required this.label,
+    this.isCenterAligned = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: isCenterAligned
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text.rich(
@@ -168,10 +217,12 @@ class Stats extends StatelessWidget {
               ),
             ],
           ),
+          textAlign: isCenterAligned ? TextAlign.center : TextAlign.start,
         ),
         const SizedBox(height: 6),
         Text(
           label,
+          textAlign: isCenterAligned ? TextAlign.center : TextAlign.start,
           style: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w500,
