@@ -445,7 +445,7 @@ class _GridBState extends State<GridB> {
         return GestureDetector(
           onTap: () {
             if (index == 3) {
-              Navigator.pushNamed(context, '/mySculpt');
+              Navigator.pushNamed(context, '/mySculptFP');
             }
           },
           child: Container(

@@ -9,6 +9,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      routes: {
+        "/home": (context) => HomeScreen(), // Adding the route named "/home"
+      },
       home: TrackForm(),
     );
   }
@@ -19,16 +22,79 @@ class TrackForm extends StatefulWidget {
   _TrackFormState createState() => _TrackFormState();
 }
 
-class _TrackFormState extends State<TrackForm> {
+class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMixin {
   final List<TextEditingController> controllers = List.generate(
     20,
         (index) => TextEditingController(),
   );
 
+  final List<int> numberValues = List.generate(20, (index) => 0);
+
   bool _isScrolled = false;
+  late AnimationController _controller;
+  late Animation<double> _fadeIn;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _fadeIn = Tween<double>(begin: 0.0, end: 1.5).animate(_controller);
+
+    // Start the fade-in animation when the page loads
+    _controller.forward();
+
+    // Show the pop-up box after 10 seconds
+    Future.delayed(Duration(seconds: 1), () {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          backgroundColor: Colors.red,
+          title: Text(
+            "Your metrics will help shape your fitness journey.",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            "Make sure you submit accurate measurements. Cross-check all data you input before hitting the tick button.",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 
   @override
   void dispose() {
+    _controller.dispose();
     for (final controller in controllers) {
       controller.dispose();
     }
@@ -43,45 +109,75 @@ class _TrackFormState extends State<TrackForm> {
           title: Text('3D ListWheelScrollView'),
         ),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is ScrollUpdateNotification) {
-            setState(() {
-              _isScrolled = true;
-            });
-          } else if (notification is ScrollEndNotification) {
-            setState(() {
-              _isScrolled = false;
-            });
-          }
-          return true;
-        },
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/mysculpttracker.jpg'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.4), // Adjust brightness here
-                    BlendMode.srcOver,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/mysculpttracker.jpg'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.4),
+                  BlendMode.srcOver,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 5.0,
+            left: 20.0,
+            right: 20.0,
+            child: FadeTransition(
+              opacity: _fadeIn,
+              child: Container(
+                height: 105.0,
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                decoration: BoxDecoration(
+                  color: Colors.yellowAccent,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red.withOpacity(0.5),
+                      blurRadius: 8.0,
+                      spreadRadius: 2.0,
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Text(
+                    "Kindly input metrics in fields below. Please make sure you take measurements in the way depicted only. Scroll upwards for each field.",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.5,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
             ),
-            ListWheelScrollView(
-              itemExtent: 250.0,
-              diameterRatio: 2.0,
+          ),
+          Positioned(
+            top: 220.0, // Adjust the value here to position the SizedBox
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              height: 80.0, // Added SizedBox with height 10.0
+            ),
+          ),
+          FadeTransition(
+            opacity: _fadeIn,
+            child: ListWheelScrollView(
+              itemExtent: 300.0,
+              diameterRatio: 1.0,
               offAxisFraction: -0.1,
               physics: FixedExtentScrollPhysics(),
               children: List.generate(
                 20,
                     (index) => Container(
-                  height: 20.0,
+                  height: 8.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.indigoAccent,
+                    color: Colors.indigo, // Changed back to indigoAccent color for all circles
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.3),
@@ -91,73 +187,87 @@ class _TrackFormState extends State<TrackForm> {
                       ),
                     ],
                   ),
-                  child: Center(
-                    child: Container(
-                      width: 180.0,
-                      height: 40.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.white,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (numberValues[index] > 0) {
+                              numberValues[index]--;
+                              controllers[index].text = numberValues[index].toString();
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.remove, color: Colors.red),
+                        iconSize: 40,
                       ),
-                      child: Center(
-                        child: TextFormField(
-                          controller: controllers[index],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(8.0),
-                            hintText: 'Enter text',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            width: 180.0,
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.white,
+                            ),
+                            child: Center(
+                              child: TextFormField(
+                                controller: controllers[index],
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  setState(() {
+                                    numberValues[index] = int.tryParse(value) ?? 0;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(8.0),
+                                  hintText: 'Enter number',
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            numberValues[index]++;
+                            controllers[index].text = numberValues[index].toString();
+                          });
+                        },
+                        icon: Icon(Icons.add, color: Colors.green),
+                        iconSize: 40,
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            Positioned(
-              top: 120.0,
-              left: MediaQuery.of(context).size.width / 2 - 108.0, // Updated to center horizontally
-              child: Column(
-                children: [
-                  AnimatedOpacity(
-                    opacity: _isScrolled ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 500),
-                    child: Text(
-                      'Swipe upwards',
-                      style: TextStyle(
-                        fontSize: 36.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // Change the text color to white
-                      ),
-                    ),
-                  ),
-                  AnimatedOpacity(
-                    opacity: _isScrolled ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 500),
-                    child: Icon(
-                      Icons.arrow_upward,
-                      size: 36.0,
-                    ),
-                  ),
-                ],
+          ),
+          Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            child: FadeTransition(
+              opacity: _fadeIn,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/mySculptLR"); // Add your submit button onPressed logic here
+                },
+                child: Icon(Icons.check),
               ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your submit button onPressed logic here
-        },
-        child: Icon(Icons.check),
+          ),
+        ],
       ),
     );
   }
@@ -178,11 +288,11 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.pushNamed(context, "/mySculptFP"); // Navigating to the route named "/home"
         },
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Colors.white,
+          color: Colors.black,
           size: 16,
         ),
       ),
@@ -234,4 +344,18 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(appBar.preferredSize.height);
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      body: Center(
+        child: Text('Welcome to the Home Screen!'),
+      ),
+    );
+  }
 }
