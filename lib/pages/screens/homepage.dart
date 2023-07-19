@@ -248,12 +248,17 @@ class _HomeState extends State<Home> {
                       const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 18.0,
+                        color: Colors.white, // Changed text color to white
                       ),
                     ),
                   ),
                   subtitle: Text(
                     "MetaboliX has provided me with an experience of.....",
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: Theme.of(context).textTheme.subtitle2!.merge(
+                      const TextStyle(
+                        color: Colors.white, // Changed text color to white
+                      ),
+                    ),
                   ),
                   trailing: const SizedBox(),
                 ),
@@ -276,8 +281,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content:
-                              Text("Hello you tapped at ${index + 1} "),
+                              content: Text("Hello you tapped at ${index + 1} "),
                             ),
                           );
                         },
@@ -469,6 +473,7 @@ class _GridBState extends State<GridB> {
                     labels[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white, // Changed text color to white
                     ),
                     textAlign: TextAlign.center,
                   ),
