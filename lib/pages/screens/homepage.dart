@@ -473,7 +473,7 @@ class _GridBState extends State<GridB> {
                     labels[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // Changed text color to white
+                      color: Colors.black, // Changed text color to white
                     ),
                     textAlign: TextAlign.center,
                   ),
