@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_metabolix_app/pages/screens/homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/home": (context) => HomeScreen(), // Adding the route named "/home"
+        "/home": (context) => Home(), // Adding the route named "/home"
       },
       home: TrackForm(),
     );
@@ -24,11 +25,11 @@ class TrackForm extends StatefulWidget {
 
 class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMixin {
   final List<TextEditingController> controllers = List.generate(
-    20,
+    15,
         (index) => TextEditingController(),
   );
 
-  final List<int> numberValues = List.generate(20, (index) => 0);
+  final List<int> numberValues = List.generate(15, (index) => 0);
 
   bool _isScrolled = false;
   late AnimationController _controller;
@@ -164,94 +165,14 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
               height: 80.0, // Added SizedBox with height 10.0
             ),
           ),
-          FadeTransition(
-            opacity: _fadeIn,
-            child: ListWheelScrollView(
-              itemExtent: 300.0,
-              diameterRatio: 1.0,
-              offAxisFraction: -0.1,
-              physics: FixedExtentScrollPhysics(),
-              children: List.generate(
-                20,
-                    (index) => Container(
-                  height: 8.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.indigo, // Changed back to indigoAccent color for all circles
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 5.0,
-                        spreadRadius: 2.0,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (numberValues[index] > 0) {
-                              numberValues[index]--;
-                              controllers[index].text = numberValues[index].toString();
-                            }
-                          });
-                        },
-                        icon: Icon(Icons.remove, color: Colors.red),
-                        iconSize: 40,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Container(
-                            width: 180.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.white,
-                            ),
-                            child: Center(
-                              child: TextFormField(
-                                controller: controllers[index],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) {
-                                  setState(() {
-                                    numberValues[index] = int.tryParse(value) ?? 0;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.all(8.0),
-                                  hintText: 'Enter number',
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            numberValues[index]++;
-                            controllers[index].text = numberValues[index].toString();
-                          });
-                        },
-                        icon: Icon(Icons.add, color: Colors.green),
-                        iconSize: 40,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          ListWheelScrollView(
+            itemExtent: 250.0,
+            diameterRatio: 1.0,
+            offAxisFraction: -0.1,
+            physics: FixedExtentScrollPhysics(),
+            children: List.generate(
+              15,
+                  (index) => _buildScrollableBox(index),
             ),
           ),
           Positioned(
@@ -269,6 +190,253 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildScrollableBox(int index) {
+    List<String> headings = [
+      "Body Weight:",
+      "Waist (at belly button):",
+      "Hips at largest circumference:",
+      "Thigh at largest circumference:",
+      "Chest at largest circumference:",
+      "Upper Arm at largest circumference:",
+      "Face:",
+      "Calf:",
+      "Neck:",
+      "Waist (5 fingers above belly button):",
+      "Last Periods Date:",
+      "Submit Front Picture:",
+      "Submit Back Picture:",
+      "Submit Side Picture:",
+      "Submit Full Picture: (casual wear)",
+    ];
+
+    return Container(
+      height: 350.0,
+      decoration: BoxDecoration(
+        color: Colors.indigo, // Changed back to indigoAccent color for all circles
+        borderRadius: BorderRadius.circular(1000.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 5.0,
+            spreadRadius: 3.0,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildHeading(headings[index]),
+          if (index == 10) // Show date picker only for the "Last Periods Date" heading
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _showDatePicker(context, index);
+                  },
+                  child: Container(
+                    width: 180,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Select Date",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.yellow, // Set the button color to yellow
+                    onPrimary: Colors.black, // Set the text color to black
+                  ),
+                ),
+                SizedBox(height: 20), // Adding a SizedBox for spacing
+                TextFormField(
+                  controller: controllers[index],
+                  style: TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 28.0, // Increased font size to 28
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  enabled: false, // Disabling editing of the field
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(8.0),
+                    hintText: 'Select date above', // Placeholder text
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellow,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else if (index >= 11 && index <= 14) // Show upload button for specified headings
+            ElevatedButton(
+              onPressed: () {
+                _showUploadOptions(context);
+              },
+              child: Container(
+                width: 180,
+                height: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  "Upload Image",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.yellow, // Set the button color to yellow
+                onPrimary: Colors.black, // Set the text color to black
+              ),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (numberValues[index] > 0) {
+                        numberValues[index]--;
+                        controllers[index].text = numberValues[index].toString();
+                      }
+                    });
+                  },
+                  icon: Icon(Icons.remove, color: Colors.pinkAccent),
+                  iconSize: 65,
+                ),
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      width: 180.0,
+                      height: 40.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.white,
+                      ),
+                      child: Center(
+                        child: TextFormField(
+                          controller: controllers[index],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 28.0, // Increased font size to 28
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              numberValues[index] = int.tryParse(value) ?? 0;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(8.0),
+                            hintText: 'Enter number',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      numberValues[index]++;
+                      controllers[index].text = numberValues[index].toString();
+                    });
+                  },
+                  icon: Icon(Icons.add, color: Colors.greenAccent),
+                  iconSize: 65,
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeading(String heading) {
+    return Container(
+      width: 200,
+      child: Text(
+        heading,
+        style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold), // Increased font size to 28
+        textAlign: TextAlign.center,
+        maxLines: 2,
+      ),
+    );
+  }
+
+  void _showDatePicker(BuildContext context, int index) async {
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (selectedDate != null) {
+      setState(() {
+        controllers[index].text = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      });
+    }
+  }
+
+  void _showUploadOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text("Phone Camera"),
+                onTap: () {
+                  // Handle Phone Camera option here
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text("Phone Gallery"),
+                onTap: () {
+                  // Handle Phone Gallery option here
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.folder),
+                title: Text("My Files"),
+                onTap: () {
+                  // Handle My Files option here
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -344,18 +512,4 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(appBar.preferredSize.height);
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Screen'),
-      ),
-      body: Center(
-        child: Text('Welcome to the Home Screen!'),
-      ),
-    );
-  }
 }
