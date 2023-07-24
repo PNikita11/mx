@@ -56,7 +56,7 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: 22,
             ),
             textAlign: TextAlign.center,
           ),
@@ -65,7 +65,7 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: 22,
             ),
             textAlign: TextAlign.center,
           ),

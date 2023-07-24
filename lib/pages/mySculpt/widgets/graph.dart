@@ -59,8 +59,10 @@ class _GraphAreaState extends State<GraphArea>
       onTap: () {
         _animationController.forward(from: 0.0);
       },
-      child: CustomPaint(
-        painter: GraphPainter(_animationController.view, data: data),
+      child: SingleChildScrollView(
+        child: CustomPaint(
+          painter: GraphPainter(_animationController.view, data: data),
+        ),
       ),
     );
   }

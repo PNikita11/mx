@@ -181,96 +181,98 @@ class _InfoState extends State<Info> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatsBox((_currentIndex) % _statsData.length),
-                _buildStatsBox((_currentIndex + 1) % _statsData.length),
-                _buildStatsBox((_currentIndex + 2) % _statsData.length),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 2),
-                  ),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatsBox((_currentIndex) % _statsData.length),
+                  _buildStatsBox((_currentIndex + 1) % _statsData.length),
+                  _buildStatsBox((_currentIndex + 2) % _statsData.length),
                 ],
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.lightBlue.shade50,
-                    Colors.lightBlue.shade100,
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 2),
+                    ),
                   ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Nikita... Its been a while you sent us your mySculpt body metrics! Its time to track your progress!!',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 25),
-          ],
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Material(
-            elevation: 5,
-            shape: const CircleBorder(),
-            child: Ink(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.indigoAccent,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 2),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.lightBlue.shade50,
+                      Colors.lightBlue.shade100,
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                ],
+                ),
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  'Nikita... Its been a while you sent us your mySculpt body metrics! Its time to track your progress!!',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              child: Container(
-                padding: const EdgeInsets.all(30),
+              const SizedBox(height: 25),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Material(
+              elevation: 5,
+              shape: const CircleBorder(),
+              child: Ink(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.grey.withOpacity(0.3),
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/mySculptSP"); // Add your track button's onPressed logic here
-                  },
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    textStyle: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+                  color: Colors.indigoAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 2),
                     ),
+                  ],
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(30),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey.withOpacity(0.3),
                   ),
-                  child: const Text('Track'),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/mySculptSP"); // Add your track button's onPressed logic here
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      textStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: const Text('Track'),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
