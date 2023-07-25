@@ -18,15 +18,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: const Home(),
@@ -46,10 +37,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final PageController pageController;
+  late final PageController secondPageController;
   ScrollController _scrollController = ScrollController();
   int pageNo = 0;
 
   Timer? carouselTimer;
+  Timer? secondCarouselTimer;
 
   Timer getTimer() {
     return Timer.periodic(const Duration(seconds: 3), (timer) {
@@ -69,6 +62,8 @@ class _HomeState extends State<Home> {
   void initState() {
     pageController = PageController(initialPage: 0, viewportFraction: 0.85);
     carouselTimer = getTimer();
+    secondPageController = PageController(initialPage: 0, viewportFraction: 0.85);
+    secondCarouselTimer = getSecondTimer();
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -87,10 +82,25 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     pageController.dispose();
+    secondPageController.dispose();
     super.dispose();
   }
 
   bool showBtmAppBr = true;
+
+  Timer getSecondTimer() {
+    return Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (pageNo == 4) {
+        pageNo = 0;
+      }
+      secondPageController.animateToPage(
+        pageNo,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInOutCirc,
+      );
+      pageNo++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +112,8 @@ class _HomeState extends State<Home> {
             bottom: Radius.circular(50.0),
           ),
         ),
-        // Remove the existing menu bar (three horizontal lines) in the app bar
         titleSpacing: 0,
-        toolbarHeight: 70, // Increased app bar height
+        toolbarHeight: 70,
         title: Padding(
           padding: const EdgeInsets.only(left: 25.0),
           child: Row(
@@ -116,20 +125,19 @@ class _HomeState extends State<Home> {
                   height: 50,
                   width: 200,
                   alignment: AlignmentDirectional.centerStart,
-                  fit: BoxFit.contain, // Ensure the image fits within the app bar
+                  fit: BoxFit.contain,
                 ),
               ),
             ],
           ),
         ),
         actions: [
-          // Add a circular icon of profile image at the rightmost part of the app bar
           GestureDetector(
             onTap: () {
               Scaffold.of(context).openEndDrawer();
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 16.0), // Add padding to the right of the CircleAvatar
+              padding: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
                 backgroundImage: const NetworkImage(
                   'https://images.unsplash.com/photo-1644982647869-e1337f992828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
@@ -248,7 +256,7 @@ class _HomeState extends State<Home> {
                       const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 18.0,
-                        color: Colors.white, // Changed text color to white
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -256,7 +264,7 @@ class _HomeState extends State<Home> {
                     "MetaboliX has provided me with an experience of.....",
                     style: Theme.of(context).textTheme.subtitle2!.merge(
                       const TextStyle(
-                        color: Colors.white, // Changed text color to white
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -335,6 +343,53 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(24.0),
                 child: GridB(),
               ),
+              SizedBox(
+                height: 200,
+                child: PageView.builder(
+                  controller: secondPageController,
+                  onPageChanged: (index) {
+                    pageNo = index;
+                    setState(() {});
+                  },
+                  itemBuilder: (_, index) {
+                    return AnimatedBuilder(
+                      animation: secondPageController,
+                      builder: (ctx, child) {
+                        return child!;
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Hello you tapped at ${index + 1} "),
+                            ),
+                          );
+                        },
+                        onPanDown: (d) {
+                          secondCarouselTimer?.cancel();
+                          secondCarouselTimer = null;
+                        },
+                        onPanCancel: () {
+                          secondCarouselTimer = getSecondTimer();
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            right: 8,
+                            left: 2,
+                            top: 8,
+                            bottom: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: Colors.amberAccent,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: 5,
+                ),
+              ),
             ],
           ),
         ),
@@ -398,8 +453,7 @@ class _HomeState extends State<Home> {
 class PopUpMen extends StatelessWidget {
   final List<PopupMenuEntry> menuList;
   final Widget? icon;
-  const PopUpMen({Key? key, required this.menuList, this.icon})
-      : super(key: key);
+  const PopUpMen({Key? key, required this.menuList, this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -473,7 +527,7 @@ class _GridBState extends State<GridB> {
                     labels[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // Changed text color to white
+                      color: Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
