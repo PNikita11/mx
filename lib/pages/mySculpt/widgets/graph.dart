@@ -43,7 +43,9 @@ class _GraphAreaState extends State<GraphArea>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2500));
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    );
     _animationController.forward();
   }
 
@@ -77,15 +79,13 @@ class GraphPainter extends CustomPainter {
       : _size = Tween<double>(begin: 0, end: 1).animate(
     CurvedAnimation(
       parent: animation,
-      curve: const Interval(0.0, 0.75,
-          curve: Curves.easeInOutCubicEmphasized),
+      curve: const Interval(0.0, 0.75, curve: Curves.easeInOutCubicEmphasized),
     ),
   ),
         _dotSize = Tween<double>(begin: 0, end: 1).animate(
           CurvedAnimation(
             parent: animation,
-            curve:
-            const Interval(0.75, 1, curve: Curves.easeInOutCubicEmphasized),
+            curve: const Interval(0.75, 1, curve: Curves.easeInOutCubicEmphasized),
           ),
         ),
         super(repaint: animation);
