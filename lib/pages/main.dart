@@ -8,6 +8,8 @@ import 'package:the_metabolix_app/pages/screens/splash.dart';
 import 'package:the_metabolix_app/pages/screens/login.dart';
 import 'package:the_metabolix_app/pages/screens/register.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
+
 
 
 void main() {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => SplashScreen(),
+        "/": (context) => ProfileScreen(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.mySculptSPRoute: (context) => TrackForm(),
         MyRoutes.mySculptTPRoute: (context) => CongratulationsPage(),
         MyRoutes.mySculptloadRoute: (context) => LoadingPage(),
+        MyRoutes.mealMapFPRoute: (context) => ProfileScreen(),
       },
     );
   }
