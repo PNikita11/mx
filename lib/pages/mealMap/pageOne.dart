@@ -1,5 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+
+class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final AppBar appBar;
+
+  const MainAppBar({
+    Key? key,
+    required this.appBar,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pushNamed(context, "/home");
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+          size: 16,
+        ),
+      ),
+      title: Padding(
+        padding: const EdgeInsets.only(left: 1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.asset(
+                'assets/images/login.png',
+                height: appBar.preferredSize.height - 8,
+                width: appBar.preferredSize.height - 0,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const Text(
+              'mealMap',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
+            ),
+          ],
+        ),
+      ),
+      centerTitle: true,
+      actions: [
+        TextButton(
+          onPressed: () {},
+          child: const Icon(
+            Icons.notifications,
+            size: 16,
+          ),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(5),
+            maximumSize: const Size(30, 30),
+            minimumSize: const Size(30, 30),
+            shape: const CircleBorder(),
+            primary: const Color(0xFFFFFFFF),
+            onPrimary: const Color(0xfffa7a3b),
+            side: BorderSide(color: Colors.grey),
+          ),
+        )
+      ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
 
 class CircularProgressBar extends StatelessWidget {
   final String title;
@@ -19,83 +97,103 @@ class CircularProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title.toUpperCase(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
+    return Container(
+      width: width * 0.45,
+      height: width * 0.45,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            offset: Offset(15,10),
+            blurRadius: 2,
+            spreadRadius: 0.9,
           ),
-        ),
-        Container(
-          width: width * 0.45, // Changed width to occupy full width of the page
-          height: width * 0.4, // Changed height to make each progress bar larger
-          child: Stack(
-            children: [
-              Center(
-                child: Container(
-                  width: width * 0.35,
-                  height: width * 0.35,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black12,
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  width: width * 0.35,
-                  height: width * 0.35,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.transparent,
-                    border: Border.all(color: progressColor, width: width * 0.04),
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  width: width * 0.35,
-                  height: width * 0.35,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.transparent,
-                    border: Border.all(color: progressColor, width: width * 0.04),
-                    gradient: SweepGradient(
-                      startAngle: -90.0,
-                      endAngle: -90.0 + 360 * progress,
-                      colors: [progressColor, progressColor, Colors.transparent, Colors.transparent],
-                      stops: [0, 1 - progress, 1 - progress, 1],
+        ],
+        border: Border.all(color: Colors.white, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center, // Center align vertically
+        children: [
+          Text(
+            title.toUpperCase(),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Container(
+            width: width * 0.30,
+            height: width * 0.30,
+            child: Stack(
+              alignment: Alignment.center, // Center align horizontally and vertically
+              children: [
+                Center(
+                  child: Container(
+                    width: width * 0.30,
+                    height: width * 0.30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              ),
-              Center(
-                child: Text(
-                  "${(progress * 100).toInt()}%",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24, // Increased font size for percentage text
-                    color: Colors.white,
+                Center(
+                  child: Container(
+                    width: width * 0.30,
+                    height: width * 0.30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                      border: Border.all(color: progressColor, width: width * 0.04),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Center(
+                  child: Container(
+                    width: width * 0.30,
+                    height: width * 0.30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                      border: Border.all(color: progressColor, width: width * 0.04),
+                      gradient: SweepGradient(
+                        startAngle: -90.0,
+                        endAngle: -90.0 + 360 * progress,
+                        colors: [progressColor, progressColor, Colors.transparent, Colors.transparent],
+                        stops: [0, 1 - progress, 1 - progress, 1],
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    "${(progress * 100).toInt()}%",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          "${leftAmount}g left",
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 18, // Increased font size for leftAmount text
-            color: Colors.white,
+          SizedBox(height: 5),
+          Text(
+            "${leftAmount}g left",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
           ),
-        ),
-        SizedBox(height: 10),
-      ],
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
@@ -104,10 +202,10 @@ class CircularProgressBarList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircularProgressBar(
               title: "BREAKFAST",
@@ -124,7 +222,7 @@ class CircularProgressBarList extends StatelessWidget {
           ],
         ),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircularProgressBar(
               title: "LUNCH",
@@ -146,21 +244,81 @@ class CircularProgressBarList extends StatelessWidget {
 }
 
 class CarouselItem {
-  final String imagePath;
   final String name;
+  final String descriptionLine1;
+  final String descriptionLine2;
+  final String descriptionLine3;
 
   CarouselItem({
-    required this.imagePath,
     required this.name,
+    required this.descriptionLine1,
+    required this.descriptionLine2,
+    required this.descriptionLine3,
   });
 }
 
 class CarouselWidget extends StatelessWidget {
   final List<CarouselItem> carouselItems = [
-    CarouselItem(imagePath: "assets/meal1.png", name: "Meal 1"),
-    CarouselItem(imagePath: "assets/meal2.png", name: "Meal 2"),
-    CarouselItem(imagePath: "assets/meal3.png", name: "Meal 3"),
-    CarouselItem(imagePath: "assets/meal4.png", name: "Meal 4"),
+    CarouselItem(
+      name: "Idli Sambar",
+      descriptionLine1: "Breakfast Item",
+      descriptionLine2: "200 KCal",
+      descriptionLine3: "High Protein",
+    ),
+    CarouselItem(
+      name: "Poha",
+      descriptionLine1: "Breakfast Item",
+      descriptionLine2: "250 KCal",
+      descriptionLine3: "Carbohydrate Rich",
+    ),
+    CarouselItem(
+      name: "Palak Paneer & Roti",
+      descriptionLine1: "Lunch Item",
+      descriptionLine2: "350 KCal",
+      descriptionLine3: "Calcium Rich",
+    ),
+    CarouselItem(
+      name: "Rajma Chawal",
+      descriptionLine1: "Lunch Item",
+      descriptionLine2: "380 KCal",
+      descriptionLine3: "Iron Packed",
+    ),
+    CarouselItem(
+      name: "Tea Biscuits",
+      descriptionLine1: "Snack Item",
+      descriptionLine2: "150 KCal",
+      descriptionLine3: "Caffeine",
+    ),
+    CarouselItem(
+      name: "Dal Makhani",
+      descriptionLine1: "Lunch Item",
+      descriptionLine2: "400 KCal",
+      descriptionLine3: "High Protein",
+    ),
+    CarouselItem(
+      name: "Upma",
+      descriptionLine1: "Breakfast Item",
+      descriptionLine2: "300 KCal",
+      descriptionLine3: "Dietary Fibre",
+    ),
+    CarouselItem(
+      name: "Vegetable Biryani",
+      descriptionLine1: "Dinner Item",
+      descriptionLine2: "450 KCal",
+      descriptionLine3: "Dietary Fibre",
+    ),
+    CarouselItem(
+      name: "Tandoori Chicken with Naan",
+      descriptionLine1: "Dinner Item",
+      descriptionLine2: "400 KCal",
+      descriptionLine3: "",
+    ),
+    CarouselItem(
+      name: "Dal Tadka with Jeera Rice",
+      descriptionLine1: "Dinner Item",
+      descriptionLine2: "350 KCal",
+      descriptionLine3: "",
+    ),
   ];
 
   @override
@@ -168,30 +326,75 @@ class CarouselWidget extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: height * 0.2,
+      height: height * 0.25,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: carouselItems.length,
         itemBuilder: (context, index) {
           final item = carouselItems[index];
           return Container(
-            margin: const EdgeInsets.only(right: 10),
+            margin: const EdgeInsets.only(right: 10, top: 10, left: 5),
             width: height * 0.15,
             decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: AssetImage(item.imagePath),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  item.name,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                  offset: Offset(2, 2),
+                  blurRadius: 4,
+                  spreadRadius: 1,
                 ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  // Here, we remove the image and use a Column to display the text.
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          item.name,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18, // Suitable font size for item name
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 2,
+                        color: Colors.grey, // Gray color line below item name
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          item.descriptionLine1,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          item.descriptionLine2,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          item.descriptionLine3,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
@@ -209,6 +412,7 @@ class ProfileScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: MainAppBar(appBar: AppBar(title: Text(''))),
       backgroundColor: const Color(0xFFE9E9E9),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
@@ -218,7 +422,7 @@ class ProfileScreen extends StatelessWidget {
             color: const Color(0xFF200087),
           ),
           unselectedIconTheme: IconThemeData(
-            color: Colors.black12,
+            color: Colors.white,
           ),
           items: [
             BottomNavigationBarItem(
@@ -248,15 +452,15 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Hello, Omkar!",
+                  "Hello, Omkar! What's at the food table today?",
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    fontSize: 26,
+                    fontSize: 17.81,
                     color: Colors.black,
                   ),
                 ),
@@ -272,8 +476,8 @@ class ProfileScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 20.0),
                   child: Text(
-                    "MEALS FOR TODAY",
-                    style: const TextStyle(color: Colors.blueGrey, fontSize: 16, fontWeight: FontWeight.w700),
+                    "RECOMMENDED TODAY...",
+                    style: const TextStyle(color: Colors.indigo, fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),
                 CarouselWidget(),
@@ -282,6 +486,22 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: ElevatedButton.icon(
+        onPressed: () {},
+        icon: Icon(Icons.notebook, color: Colors.white),
+        label: Text(
+          'TRACKERPAD',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        style: ElevatedButton.styleFrom(
+          primary: Colors.indigo,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
