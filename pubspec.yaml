@@ -42,7 +42,8 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   scroll_snap_list: ^0.9.1
   intl: ^0.18.1
-  flutter_icons: ^1.1.0
+  font_awesome_flutter: ^10.5.0
+
 
 
 dev_dependencies:

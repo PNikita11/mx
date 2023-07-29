@@ -505,7 +505,11 @@ class _GridBState extends State<GridB> {
             if (index == 3) {
               Navigator.pushNamed(context, '/mySculptFP');
             }
+            if (index == 1) {
+              Navigator.pushNamed(context, '/mealMapFP');
+            }
           },
+
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0),

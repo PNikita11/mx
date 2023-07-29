@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppBar appBar;
@@ -311,13 +311,13 @@ class CarouselWidget extends StatelessWidget {
       name: "Tandoori Chicken with Naan",
       descriptionLine1: "Dinner Item",
       descriptionLine2: "400 KCal",
-      descriptionLine3: "",
+      descriptionLine3: "High Protein",
     ),
     CarouselItem(
       name: "Dal Tadka with Jeera Rice",
       descriptionLine1: "Dinner Item",
       descriptionLine2: "350 KCal",
-      descriptionLine3: "",
+      descriptionLine3: "Dietary Fibre",
     ),
   ];
 
@@ -333,7 +333,7 @@ class CarouselWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = carouselItems[index];
           return Container(
-            margin: const EdgeInsets.only(right: 10, top: 10, left: 5),
+            margin: const EdgeInsets.only(right: 10, top: 10, left: 5, bottom: 1),
             width: height * 0.15,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -481,17 +481,18 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 CarouselWidget(),
+                SizedBox(height: 80),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: ElevatedButton.icon(
+      floatingActionButton: ElevatedButton(
         onPressed: () {},
-        icon: Icon(Icons.notebook, color: Colors.white),
-        label: Text(
+        child: Text(
           'TRACKERPAD',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36),
+
         ),
         style: ElevatedButton.styleFrom(
           primary: Colors.indigo,
@@ -505,3 +506,9 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
