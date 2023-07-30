@@ -9,6 +9,7 @@ import 'package:the_metabolix_app/pages/screens/login.dart';
 import 'package:the_metabolix_app/pages/screens/register.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
 
 
 
