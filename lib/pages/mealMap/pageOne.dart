@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppBar appBar;
@@ -201,40 +205,86 @@ class CircularProgressBar extends StatelessWidget {
 class CircularProgressBarList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircularProgressBar(
-              title: "BREAKFAST",
-              leftAmount: 72,
-              progress: 0.3,
-              progressColor: Colors.green,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressBar(
+                  title: "BREAKFAST",
+                  leftAmount: 72,
+                  progress: 0.3,
+                  progressColor: Colors.green,
+                ),
+                CircularProgressBar(
+                  title: "SNACKS",
+                  leftAmount: 252,
+                  progress: 0.9,
+                  progressColor: Colors.red,
+                ),
+              ],
             ),
-            CircularProgressBar(
-              title: "SNACKS",
-              leftAmount: 252,
-              progress: 0.9,
-              progressColor: Colors.red,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressBar(
+                  title: "LUNCH",
+                  leftAmount: 61,
+                  progress: 0.1,
+                  progressColor: Colors.yellow,
+                ),
+                CircularProgressBar(
+                  title: "DINNER",
+                  leftAmount: 50,
+                  progress: 0.5,
+                  progressColor: Colors.orange,
+                ),
+              ],
             ),
           ],
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "ADD:",
+                style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircularProgressBar(
-              title: "LUNCH",
-              leftAmount: 61,
-              progress: 0.1,
-              progressColor: Colors.yellow,
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/mealMapSP');
+              },
+              child: Text('BREAKFAST'),
             ),
-            CircularProgressBar(
-              title: "DINNER",
-              leftAmount: 50,
-              progress: 0.5,
-              progressColor: Colors.orange,
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/mealMapTP');
+              },
+              child: Text('LUNCH'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/mealMapFOP');
+              },
+              child: Text('SNACK'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/mealMapFIP');
+              },
+              child: Text('DINNER'),
             ),
           ],
         ),
@@ -242,6 +292,8 @@ class CircularProgressBarList extends StatelessWidget {
     );
   }
 }
+
+
 
 class CarouselItem {
   final String name;
@@ -471,10 +523,10 @@ class ProfileScreen extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 CircularProgressBarList(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 20.0),
+                  padding: const EdgeInsets.only(left: 8.0, top: 10.0),
                   child: Text(
                     "RECOMMENDED TODAY...",
                     style: const TextStyle(color: Colors.indigo, fontSize: 16, fontWeight: FontWeight.w700),
@@ -491,7 +543,7 @@ class ProfileScreen extends StatelessWidget {
         onPressed: () {},
         child: Text(
           'TRACKERPAD',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28),
 
         ),
         style: ElevatedButton.styleFrom(
@@ -507,8 +559,21 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-
-
-
-
-
+Widget _buildCustomButton(BuildContext context, {required String title, required String route}) {
+  return ElevatedButton(
+    onPressed: () {
+      Navigator.pushNamed(context, route);
+    },
+    child: Text(
+      title,
+      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+    ),
+    style: ElevatedButton.styleFrom(
+      primary: Colors.black54,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 1),
+    ),
+  );
+}

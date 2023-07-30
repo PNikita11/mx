@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
 import 'package:the_metabolix_app/pages/mySculpt/firstPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/loadingPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/secondPage_F.dart';
@@ -9,6 +13,10 @@ import 'package:the_metabolix_app/pages/screens/login.dart';
 import 'package:the_metabolix_app/pages/screens/register.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
 
 
 
@@ -24,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => ProfileScreen(),
+        "/": (context) => SplashScreen(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
@@ -34,6 +42,11 @@ class MyApp extends StatelessWidget {
         MyRoutes.mySculptTPRoute: (context) => CongratulationsPage(),
         MyRoutes.mySculptloadRoute: (context) => LoadingPage(),
         MyRoutes.mealMapFPRoute: (context) => ProfileScreen(),
+        MyRoutes.mealMapSPRoute: (context) => ProductListScreen(),
+        MyRoutes.mealMapTPRoute: (context) => LunchListScreen(),
+        MyRoutes.mealMapFOPRoute: (context) => SnackListScreen(),
+        MyRoutes.mealMapFIPRoute: (context) => DinnerListScreen(),
+
       },
     );
   }
