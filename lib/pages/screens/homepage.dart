@@ -272,7 +272,8 @@ class _HomeState extends State<Home> {
                 ),
               ),
               SizedBox(
-                height: 200,
+                height: 250,
+                width: 400,
                 child: PageView.builder(
                   controller: pageController,
                   onPageChanged: (index) {
@@ -302,10 +303,10 @@ class _HomeState extends State<Home> {
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
-                            right: 8,
-                            left: 2,
+                            right: 5,
+                            left: 1,
                             top: 8,
-                            bottom: 2,
+                            bottom: 1,
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24.0),
@@ -533,16 +534,16 @@ class _GridBState extends State<GridB> {
                 children: [
                   Image.asset(
                     imagePaths[index],
-                    height: 80,
-                    width: 80,
+                    height: 100,
+                    width: 100,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 6.0),
                   Text(
                     labels[index],
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 25,
                       color: Colors.black,
                     ),
                     textAlign: TextAlign.center,
