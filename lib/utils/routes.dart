@@ -12,5 +12,6 @@ class MyRoutes {
   static String mealMapTPRoute = "/mealMapTP";
   static String mealMapFOPRoute = "/mealMapFOP";
   static String mealMapFIPRoute = "/mealMapFIP";
+  static String dietInaryFPRoute = "/dietInFP";
 
 }

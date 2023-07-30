@@ -1,136 +1,723 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RegisterPage(),
-      theme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-    );
-  }
-}
-
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  List<int> data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  int currentIndex = 0;
+  int _currentStep = 0;
 
-  Widget _buildItemList(BuildContext context, int index) {
-    double scaleFactor = index == currentIndex ? 1.5 : 1.0;
+  void onStepContinue() {
+    if (_currentStep < 5) {
+      setState(() {
+        _currentStep = _currentStep + 1;
+      });
+    }
+  }
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double itemWidth = screenWidth * scaleFactor;
-    double itemHeight = screenHeight * scaleFactor;
+  void onStepCancel() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep = _currentStep - 1;
+      });
+    }
+  }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          currentIndex = index;
-        });
-      },
-      child: SizedBox(
-        width: itemWidth,
-        height: itemHeight,
-        child: Center(
-          child: Transform.scale(
-            scale: scaleFactor,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Center(
-                child: Container(
+  void onStepTapped(int step) {
+    setState(() {
+      _currentStep = step;
+    });
+  }
+
+  StepState _getStepState(int stepIndex) {
+    if (_currentStep == stepIndex) {
+      return StepState.editing;
+    } else if (_currentStep > stepIndex) {
+      return StepState.complete;
+    } else {
+      return StepState.indexed;
+    }
+  }
+
+  Widget controlsBuilder(BuildContext context,
+      {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (_currentStep > 0)
+          ElevatedButton(
+            onPressed: onStepCancel,
+            child: Text('PREVIOUS'),
+          ),
+        SizedBox(width: 20),
+        if (_currentStep < 5)
+          ElevatedButton(
+            onPressed: onStepContinue,
+            child: Text('NEXT'),
+          ),
+        if (_currentStep == 5) SizedBox(width: 20),
+        ElevatedButton(
+          onPressed: _currentStep == 5 ? _registerUser : null,
+          child: Text(_currentStep == 5 ? 'REGISTER' : 'FINISH'),
+        ),
+      ],
+    );
+  }
+
+  String _firstName = '';
+  String _lastName = '';
+  String _gender = '';
+  DateTime? _birthdate;
+  String _medicalCondition = '';
+  bool _hasInjuries = false;
+  double _height = 0.0;
+  double _weight = 0.0;
+  double _waist = 0.0;
+  double _hip = 0.0;
+  double _upperArm = 0.0;
+  double _upperThigh = 0.0;
+  String _activityLevel = '';
+  String _foodPreference = '';
+  bool _hasAllergies = false;
+  String _username = '';
+  String _password = '';
+  String _email = '';
+  String _mobileNumber = '';
+  bool _isHomeFit = false;
+  bool _isFullFit = false;
+  bool _isEatFit = false;
+  bool _isFreeUser = false;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final Color customStepperColor = Colors.black;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(25.0),
+          ),
+        ),
+        titleSpacing: 0,
+        toolbarHeight: 70,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 25.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 35.0),
+                child: Image.asset(
+                  'assets/images/meta logo (1).png',
+                  height: 50,
                   width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2.0,
+                  alignment: AlignmentDirectional.centerStart,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 4,
+                child: Theme(
+                  data: ThemeData(
+                    colorScheme: ColorScheme.light(
+                      primary: customStepperColor,
+                      onPrimary: Colors.white,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.purple.withOpacity(0.3),
-                        spreadRadius: 5,
-                        blurRadius: 20,
-                        offset: Offset(0, 0),
+                    textTheme: TextTheme(
+                      headline6: TextStyle(
+                        color: customStepperColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Stepper(
+                      physics: ClampingScrollPhysics(),
+                      type: StepperType.horizontal,
+                      currentStep: _currentStep,
+                      onStepContinue: onStepContinue,
+                      onStepCancel: onStepCancel,
+                      onStepTapped: onStepTapped,
+                      steps: [
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 0,
+                          state: _getStepState(0),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(0),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 1,
+                          state: _getStepState(1),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(1),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 2,
+                          state: _getStepState(2),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(2),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 3,
+                          state: _getStepState(3),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(3),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 4,
+                          state: _getStepState(4),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(4),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Step(
+                          title: Text(''),
+                          isActive: _currentStep == 5,
+                          state: _getStepState(5),
+                          content: Column(
+                            children: [
+                              Container(
+                                decoration: _boxDecoration,
+                                padding: EdgeInsets.all(16),
+                                child: _buildStepContent(5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+  Step buildStepWithTitle(String title, Widget content) {
+    return Step(
+      title: Text(title),
+      isActive: _currentStep == int.parse(title.substring(5)) - 1,
+      state: _getStepState(int.parse(title.substring(5)) - 1),
+      content: Column(
         children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: PageView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return _buildItemList(context, index);
-                },
-                controller: PageController(
-                  initialPage: currentIndex,
-                ),
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_left_outlined),
-                color: Colors.purple,
-                iconSize: 60,
-                onPressed: () {
-                  setState(() {
-                    currentIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_right_outlined),
-                color: Colors.purple,
-                iconSize: 60,
-                onPressed: () {
-                  setState(() {
-                    currentIndex = currentIndex < data.length - 1 ? currentIndex + 1 : currentIndex;
-                  });
-                },
-              ),
-            ],
+          Container(
+            decoration: _boxDecoration,
+            padding: EdgeInsets.all(16),
+            child: content,
           ),
         ],
       ),
     );
+  }
+
+  BoxDecoration get _boxDecoration {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: Offset(0, 3),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showDatePicker(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _birthdate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _birthdate) {
+      setState(() {
+        _birthdate = picked;
+      });
+    }
+  }
+
+  Widget _buildStepContent(int stepIndex) {
+    switch (stepIndex) {
+      case 0:
+        return Column(
+          children: [
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your First Name';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _firstName = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'First Name',
+              ),
+            ),
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Last Name';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _lastName = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Last Name',
+              ),
+            ),
+            SizedBox(
+              height: 20,
+              width: 20,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Gender',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Radio<String>(
+                      value: 'Male',
+                      groupValue: _gender,
+                      onChanged: (value) {
+                        setState(() {
+                          _gender = value ?? '';
+                        });
+                      },
+                    ),
+                    Text('Male'),
+                    SizedBox(width: 20.0),
+                    Radio<String>(
+                      value: 'Female',
+                      groupValue: _gender,
+                      onChanged: (value) {
+                        setState(() {
+                          _gender = value ?? '';
+                        });
+                      },
+                    ),
+                    Text('Female'),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Add Birthday',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _showDatePicker(context);
+                  },
+                  child: Text('Select Birthdate'),
+                ),
+              ],
+            ),
+
+            if (_birthdate != null)
+              Text('Selected Birthdate: ${_birthdate!.toLocal()}'),
+          ],
+        );
+      case 1:
+        return Column(
+          children: [
+            RadioListTile<String>(
+              title: Text('PCOD'),
+              value: 'PCOD',
+              groupValue: _medicalCondition,
+              onChanged: (value) {
+                setState(() {
+                  _medicalCondition = value ?? '';
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: Text('Diabetes'),
+              value: 'Diabetes',
+              groupValue: _medicalCondition,
+              onChanged: (value) {
+                setState(() {
+                  _medicalCondition = value ?? '';
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: Text('None'),
+              value: 'None',
+              groupValue: _medicalCondition,
+              onChanged: (value) {
+                setState(() {
+                  _medicalCondition = value ?? '';
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: Text('Any other:'),
+              value: 'Other',
+              groupValue: _medicalCondition,
+              onChanged: (value) {
+                setState(() {
+                  _medicalCondition = value ?? '';
+                });
+              },
+            ),
+            if (_medicalCondition == 'Other')
+              TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    // Use this value if needed
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Specify Other Medical Condition',
+                ),
+              ),
+            CheckboxListTile(
+              title: Text('Has Injuries?'),
+              value: _hasInjuries,
+              onChanged: (value) {
+                setState(() {
+                  _hasInjuries = value ?? false;
+                });
+              },
+            ),
+          ],
+        );
+      case 2:
+        return Column(
+          children: [
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _height = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Height',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _weight = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Weight',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _waist = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Waist (in/cm)',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _hip = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Hip (in/cm)',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _upperArm = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Upper Arm',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                // Add validation as per your requirements
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _upperThigh = double.tryParse(value) ?? 0.0;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Upper Thigh',
+              ),
+            ),
+          ],
+        );
+      case 3:
+        return Column(
+          children: [
+            RadioListTile<String>(
+              title: Text('Sedentary'),
+              value: 'Sedentary',
+              groupValue: _activityLevel,
+              onChanged: (value) {
+                setState(() {
+                  _activityLevel = value ?? '';
+                });
+              },
+            ),
+            // Add other activity levels as RadioListTile
+            // ...
+            CheckboxListTile(
+              title: Text('Veg, Non Veg, Pescetarian?'),
+              value: _foodPreference.isNotEmpty,
+              onChanged: (value) {
+                setState(() {
+                  _foodPreference = value ?? false ? 'Veg' : '';
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: Text('Has Allergies?'),
+              value: _hasAllergies,
+              onChanged: (value) {
+                setState(() {
+                  _hasAllergies = value ?? false;
+                });
+              },
+            ),
+          ],
+        );
+      case 4:
+        return Column(
+          children: [
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Username';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _username = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Username',
+              ),
+            ),
+            TextFormField(
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Password';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _password = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+            ),
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Email ID';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _email = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Email ID',
+              ),
+            ),
+            TextFormField(
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Mobile Number';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _mobileNumber = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Mobile Number',
+              ),
+            ),
+          ],
+        );
+      case 5:
+        return Column(
+          children: [
+            CheckboxListTile(
+              title: Text('HomeFit'),
+              value: _isHomeFit,
+              onChanged: (value) {
+                setState(() {
+                  _isHomeFit = value ?? false;
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: Text('FullFit'),
+              value: _isFullFit,
+              onChanged: (value) {
+                setState(() {
+                  _isFullFit = value ?? false;
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: Text('Eatfit'),
+              value: _isEatFit,
+              onChanged: (value) {
+                setState(() {
+                  _isEatFit = value ?? false;
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: Text('Free User'),
+              value: _isFreeUser,
+              onChanged: (value) {
+                setState(() {
+                  _isFreeUser = value ?? false;
+                });
+              },
+            ),
+          ],
+        );
+      default:
+        return Container();
+    }
+  }
+
+  void _registerUser() {
+    if (_formKey.currentState?.validate() == true) {
+      // Registration logic here
+    }
   }
 }

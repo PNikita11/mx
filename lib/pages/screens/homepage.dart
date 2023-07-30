@@ -381,7 +381,7 @@ class _HomeState extends State<Home> {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24.0),
-                            color: Colors.amberAccent,
+                            color: Colors.yellow,
                           ),
                         ),
                       ),
@@ -495,7 +495,7 @@ class _GridBState extends State<GridB> {
           'assets/icons/mySculpt icon.png',
         ];
         List<String> labels = [
-          'dietInery',
+          'dietInary',
           'mealMap',
           'metaFit',
           'mySculpt',
@@ -508,13 +508,24 @@ class _GridBState extends State<GridB> {
             if (index == 1) {
               Navigator.pushNamed(context, '/mealMapFP');
             }
+            if (index == 0) {
+              Navigator.pushNamed(context, '/dietInFP');
+            }
           },
 
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0),
-              color: Colors.amberAccent.shade100,
-              border: Border.all(color: Colors.blue, width: 2.0),
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+              border: Border.all(color: Colors.white, width: 2.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(1.0),
+                  spreadRadius: 4,
+                  blurRadius: 8,
+                  offset: Offset(5, 5), // Changes the position of the shadow
+                ),
+              ],
             ),
             child: Center(
               child: Column(
@@ -531,6 +542,7 @@ class _GridBState extends State<GridB> {
                     labels[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
                       color: Colors.black,
                     ),
                     textAlign: TextAlign.center,

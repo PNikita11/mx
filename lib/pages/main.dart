@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_metabolix_app/pages/dietnary/firstpage.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
@@ -12,11 +13,10 @@ import 'package:the_metabolix_app/pages/screens/splash.dart';
 import 'package:the_metabolix_app/pages/screens/login.dart';
 import 'package:the_metabolix_app/pages/screens/register.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
+
 import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
-import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
-import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
-import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
-import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
+
+
 
 
 
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
+
         "/": (context) => SplashScreen(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
         MyRoutes.mealMapTPRoute: (context) => LunchListScreen(),
         MyRoutes.mealMapFOPRoute: (context) => SnackListScreen(),
         MyRoutes.mealMapFIPRoute: (context) => DinnerListScreen(),
+        MyRoutes.dietInaryFPRoute: (context) => FirstPage(),
+
 
       },
     );
