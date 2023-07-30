@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
       home: CongratulationsPage(),
       routes: {
         "/mySculptFPRoute": (context) => MySculptDashboard(),
+        "/mySculptTP": (context) => MySculptDashboard(), // Added route for mySculptTP
       },
     );
   }
@@ -21,11 +22,12 @@ class CongratulationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellowAccent,
+      backgroundColor: Colors.yellow,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 20),
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: Image.asset(
@@ -37,25 +39,34 @@ class CongratulationsPage extends StatelessWidget {
             SizedBox(height: 20),
             Container(
               width: MediaQuery.of(context).size.width * 0.90,
-              height: MediaQuery.of(context).size.width * 0.95, // Increased height by 5
+              height: MediaQuery.of(context).size.width * 0.95,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                    spreadRadius: 3,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center align the text
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       "Congratulations!",
                       style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontFamily: 'Helvetica',
+                        color: Colors.black,
                       ),
-                      textAlign: TextAlign.center, // Center align the text
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 12),
                     Text(
@@ -63,9 +74,10 @@ class CongratulationsPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontFamily: 'Helvetica',
+                        color: Colors.black,
                       ),
-                      textAlign: TextAlign.center, // Center align the text
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 12),
                     Text(
@@ -73,9 +85,10 @@ class CongratulationsPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontFamily: 'Helvetica',
+                        color: Colors.black,
                       ),
-                      textAlign: TextAlign.center, // Center align the text
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 12),
                     Text(
@@ -83,53 +96,21 @@ class CongratulationsPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontFamily: 'Helvetica',
+                        color: Colors.black,
                       ),
-                      textAlign: TextAlign.center, // Center align the text
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20), // Added space between the black rectangle and the elliptical button
-            EllipticalButton(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EllipticalButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, "/mySculptFP");
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.75,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.indigo,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/login.png',
-              height: 25,
-            ),
-            SizedBox(width: 10),
-            Text(
-              "BACK TO mySculpt DASHBOARD",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center, // Center align the text
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                RoundButtonWithArrow(),
+              ],
             ),
           ],
         ),
@@ -147,6 +128,39 @@ class MySculptDashboard extends StatelessWidget {
       ),
       body: Center(
         child: Text('Welcome to mySculpt Dashboard!'),
+      ),
+    );
+  }
+}
+
+class RoundButtonWithArrow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        // Navigate to "/mySculptTP" when the button is tapped
+        Navigator.pushNamed(context, "/mySculptTP");
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.indigo,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10,
+              spreadRadius: 3,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+          size: 30,
+        ),
       ),
     );
   }
