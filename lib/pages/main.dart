@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => MyLogin(),
+        "/": (context) => FirstPage(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
