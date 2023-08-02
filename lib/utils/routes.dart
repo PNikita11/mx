@@ -8,5 +8,10 @@ class MyRoutes {
   static String mySculptTPRoute = "/mySculptTP";
   static String mySculptloadRoute = "/mySculptLR";
   static String mealMapFPRoute = "/mealMapFP";
+  static String mealMapSPRoute = "/mealMapSP";
+  static String mealMapTPRoute = "/mealMapTP";
+  static String mealMapFOPRoute = "/mealMapFOP";
+  static String mealMapFIPRoute = "/mealMapFIP";
+  static String dietInaryFPRoute = "/dietInFP";
 
 }

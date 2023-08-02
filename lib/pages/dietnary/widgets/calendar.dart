@@ -103,7 +103,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 },
               ),
               SizedBox(
-                height: 300,
+                height: 400,
                 child: Column(
                   children: [
                     Expanded(
@@ -152,29 +152,35 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   ],
                 ),
               ),
-              SizedBox(height: 90),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.circular(16.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  // This function will be called when the button is pressed
+                  // You can define the behavior of the button here
+                  // For example, you can navigate to another screen:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MonthlyAnalyticsScreen()),
+                  );
+                },
+                child: Text(
+                  'View Monthly Analytics', // Text displayed on the button
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Second Container',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  ),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
                     ),
-                    // Add more widgets here for the second container
-                  ],
+                  ),
+                  // You can customize the button's appearance further using other properties
                 ),
               ),
             ],

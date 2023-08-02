@@ -27,14 +27,10 @@ class Tabs extends StatefulWidget {
 class _TabsState extends State<Tabs> {
   /// List of Tab Bar Item
   List<String> items = [
-    "Home",
-    "Explore",
-    "Search",
-    "Feed",
-    "Post",
-    "Activity",
-    "Setting",
-    "Profile",
+    "Total",
+    "BreakFast",
+    "Lunch",
+    "Dinner",
   ];
 
   /// List of body icon
@@ -43,10 +39,6 @@ class _TabsState extends State<Tabs> {
     Icons.explore,
     Icons.search,
     Icons.feed,
-    Icons.post_add,
-    Icons.local_activity,
-    Icons.settings,
-    Icons.person
   ];
   int current = 0;
 

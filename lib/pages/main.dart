@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:the_metabolix_app/pages/dietnary/firstpage.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageFour.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageThree.dart';
+import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
 import 'package:the_metabolix_app/pages/mySculpt/firstPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/loadingPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/secondPage_F.dart';
@@ -8,6 +13,10 @@ import 'package:the_metabolix_app/pages/screens/splash.dart';
 import 'package:the_metabolix_app/pages/screens/login.dart';
 import 'package:the_metabolix_app/pages/screens/register.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
+
+import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
+
+
 
 
 
@@ -23,7 +32,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
+<<<<<<< HEAD
         "/": (context) => FirstPage(),
+=======
+
+        "/": (context) => SplashScreen(),
+>>>>>>> c4e29f7fcf5f76a119cc5a3cd3f1d032835b3b79
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
@@ -32,6 +46,14 @@ class MyApp extends StatelessWidget {
         MyRoutes.mySculptSPRoute: (context) => TrackForm(),
         MyRoutes.mySculptTPRoute: (context) => CongratulationsPage(),
         MyRoutes.mySculptloadRoute: (context) => LoadingPage(),
+        MyRoutes.mealMapFPRoute: (context) => ProfileScreen(),
+        MyRoutes.mealMapSPRoute: (context) => ProductListScreen(),
+        MyRoutes.mealMapTPRoute: (context) => LunchListScreen(),
+        MyRoutes.mealMapFOPRoute: (context) => SnackListScreen(),
+        MyRoutes.mealMapFIPRoute: (context) => DinnerListScreen(),
+        MyRoutes.dietInaryFPRoute: (context) => FirstPage(),
+
+
       },
     );
   }

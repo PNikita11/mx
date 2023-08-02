@@ -38,7 +38,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             const Text(
-              'dietNary',
+              'dietInary',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
