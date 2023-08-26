@@ -46,11 +46,9 @@ dependencies:
   badges: ^3.1.1
   provider: ^6.0.5
   table_calendar: ^3.0.9
-<<<<<<< HEAD
   flutter_toggle_tab: ^1.3.0
-=======
   sqflite: ^2.3.0
->>>>>>> c4e29f7fcf5f76a119cc5a3cd3f1d032835b3b79
+
 
 
 dev_dependencies:

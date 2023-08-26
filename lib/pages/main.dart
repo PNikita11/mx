@@ -32,12 +32,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-<<<<<<< HEAD
         "/": (context) => FirstPage(),
-=======
 
         "/": (context) => SplashScreen(),
->>>>>>> c4e29f7fcf5f76a119cc5a3cd3f1d032835b3b79
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
         MyRoutes.registerRoute: (context) => RegisterPage(),
@@ -58,3 +55,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+//hello there
+
