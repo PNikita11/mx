@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:the_metabolix_app/utils/routes.dart';
+
+import 'homepage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -52,9 +55,23 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     // Delayed navigation to the login page after 4 seconds
-    Future.delayed(const Duration(seconds: 8), () {
-      Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+    Future.delayed(const Duration(seconds: 3), () {
+      _checkLoggedInUser();
     });
+  }
+
+
+  // Checking if User had already login
+  void _checkLoggedInUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // User is already logged in, navigate to the home page
+      Navigator.pushReplacementNamed(context, MyRoutes.homeRoute);
+    }
+    else {
+      // User will navigate ti Login Page
+      Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+    }
   }
 
   @override
@@ -68,40 +85,23 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment:MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 90,
-            ),
-            SizedBox(
-              height: 90,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SlideTransition(
-                    position: _flyInAnimation,
-                    child: ScaleTransition(
-                      scale: _zoomInAnimation,
-                      child: Image(
-                        image: AssetImage("assets/images/metabolix icon.jpg"),
-                        width: 100,
-                        height: 100,
-                      ),
+              height: 190,
+              child: SlideTransition(
+                position: _flyInAnimation,
+                child: ScaleTransition(
+                  scale: _zoomInAnimation,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 60), // Adjust the top padding as needed
+                    child: Image(
+                      image: AssetImage("assets/images/metabolix logo.png"), // Replace with your combined image path
+                      width: 400, // Adjust the width as needed
+                      height: 400, // Adjust the height as needed
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  SlideTransition(
-                    position: _flyInAnimation,
-                    child: ScaleTransition(
-                      scale: _zoomInAnimation,
-                      child: Image(
-                        image: AssetImage("assets/images/metabolix text.jpg"),
-                        width: 250,
-                        height: 250,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
             SizedBox(
@@ -135,6 +135,9 @@ class _SplashScreenState extends State<SplashScreen>
           ],
         ),
       ),
+
     );
   }
 }
+
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:the_metabolix_app/utils/routes.dart';
 
 void main() {
   runApp(MyApp());
@@ -140,7 +139,7 @@ class RoundButtonWithArrow extends StatelessWidget {
     return InkWell(
       onTap: () {
         // Navigate to "/mySculptTP" when the button is tapped
-        Navigator.pushNamed(context, MyRoutes.homeRoute);
+        Navigator.pushNamed(context, "/mySculptFP");
       },
       child: Container(
         width: 60,

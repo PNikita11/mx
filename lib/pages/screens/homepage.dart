@@ -1,8 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import '../../utils/routes.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +44,33 @@ class _HomeState extends State<Home> {
   late final PageController pageController;
   late final PageController secondPageController;
   ScrollController _scrollController = ScrollController();
+
+  //Getting Greeting
+  String getGreeting() {
+    var now = DateTime.now();
+    var hour = now.hour;
+    if (hour >= 0 && hour < 12) {
+      return "Good Morning";
+    } else if (hour >= 12 && hour < 14) {
+      return "Good Afternoon";
+    } else {
+      return "Good Evening";
+    }
+  }
+
+  // Get User Display Name
+  String getUserName(){
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String currentUserDisplayName = user.displayName ?? "User"; // Use "User" as default if display name is not set
+      return currentUserDisplayName;
+    }
+    else{
+      return "User";
+    }
+  }
+
+
   int pageNo = 0;
 
   Timer? carouselTimer;
@@ -104,6 +136,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    String greeting = getGreeting();
+    String displayName = getUserName();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
@@ -142,7 +176,7 @@ class _HomeState extends State<Home> {
                 backgroundImage: const NetworkImage(
                   'https://images.unsplash.com/photo-1644982647869-e1337f992828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
                 ),
-                child: const PopUpMen(
+                child:  PopUpMen(
                   menuList: [
                     PopupMenuItem(
                       child: ListTile(
@@ -153,7 +187,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     PopupMenuItem(
-                      child: ListTile(
+                      child:  ListTile(
                         leading: Icon(
                           CupertinoIcons.bag,
                         ),
@@ -175,6 +209,9 @@ class _HomeState extends State<Home> {
                         ),
                         title: Text("Log Out"),
                       ),
+                      onTap: () async {
+                        await _signOut(context); // Pass the context to the sign-out function
+                      },
                     ),
                   ],
                   icon: CircleAvatar(
@@ -231,7 +268,7 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(
-                  "Good Evening, Omkar!",
+                  "$greeting, $displayName!",
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -450,6 +487,38 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+// Sign Out Method Start
+Future<void> _signOut(BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+  } catch (error) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error Signing Out"),
+          content: Text("An error occurred while signing out."),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+// Sign Out Method End
+
+
+
+
+
 
 class PopUpMen extends StatelessWidget {
   final List<PopupMenuEntry> menuList;

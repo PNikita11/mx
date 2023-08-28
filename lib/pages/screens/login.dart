@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'homepage.dart';
+
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -10,6 +15,11 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +62,7 @@ class _MyLoginState extends State<MyLogin> {
                         ],
                       ),
                       child: TextField(
+                        controller: _emailController,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -90,6 +101,7 @@ class _MyLoginState extends State<MyLogin> {
                         ],
                       ),
                       child: TextField(
+                        controller: _passwordController,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -134,7 +146,7 @@ class _MyLoginState extends State<MyLogin> {
                           child: IconButton(
                             color: Colors.white,
                             onPressed: () {
-                              Navigator.pushNamed(context, '/home');
+                              _loginUser();
                             },
                             icon: const Icon(Icons.arrow_forward),
                           ),
@@ -192,4 +204,72 @@ class _MyLoginState extends State<MyLogin> {
       ),
     );
   }
+  void _loginUser() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      // Show an error message if email or password is empty
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text('Error'),
+              content: Text('Please enter both email and password.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // If login is successful, you can show a success message or navigate to the next screen
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text('Success'),
+              content: Text('User logged in successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Handle login failure and show an error message
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text('Error'),
+              content: Text(e.message!),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+      );
+    }
+  }
+
 }

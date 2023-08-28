@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,6 +20,9 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _currentStep = _currentStep + 1;
       });
+    }
+    else if(_currentStep==5){
+      _registerUser();
     }
   }
 
@@ -715,9 +723,131 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _registerUser() {
-    if (_formKey.currentState?.validate() == true) {
-      // Registration logic here
+  void _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Creating User
+        UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.trim(),
+          password: _password.trim(),
+        );
+        if (userCredential.user != null) {
+          print("User registration successful for user: ${userCredential.user!.email}");
+          // Here you can call the function to store user data using the UID
+          await storeUserData(userCredential.user!.uid);
+          // Show a success dialog or navigate to the next screen
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Success'),
+              content: Text('User registered successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // Navigate to the next screen or perform other actions
+                    Navigator.pushReplacementNamed(context, '/login'); // Navigate to the login screen
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text('Error'),
+                content: Text(e.message!),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+        );
+      }
+    }
+  }
+
+  // Data Storing of Registration Form
+  Future<void> storeUserData(String uid) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        //Setting user Display Name
+        try {
+          await user.updateDisplayName(_username);
+        } catch (error) {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Error'),
+                  content: Text(error.toString()),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+          );
+        } // End DisplayName Code
+
+
+        CollectionReference usersRef = FirebaseFirestore.instance.collection('RegisteredUsers');
+
+        String formattedBirthdate = _birthdate != null ? DateFormat('dd-MM-yyyy').format(_birthdate!)  : 'birthday';
+
+        await usersRef.doc(uid).set({
+          'user_detail': {
+            'name': "${_lastName.trim()} ${_firstName.trim()}",
+            'gender': _gender,
+            'username': _username.trim(),
+            'email': _email.trim(),
+            'phone': _mobileNumber.trim(),
+            'birthday': formattedBirthdate,
+          },
+          'user_health_info': {
+            'medical_condition': _medicalCondition,
+            'has_injuries': _hasInjuries,
+          },
+          'user_physical_stats': {
+            'height': _height,
+            'weight': _weight,
+            'waist': _waist,
+            'hip': _hip,
+            'upper_arm': _upperArm,
+            'upper_thigh': _upperThigh,
+          },
+          'user_preferences': {
+            'activity_level': _activityLevel,
+            'food_preference': _foodPreference,
+            'has_allergies': _hasAllergies,
+          },
+          'fitness_plan': {
+            'is_home_fit': _isHomeFit,
+            'is_full_fit': _isFullFit,
+            'is_eat_fit': _isEatFit,
+            'is_free_user': _isFreeUser,
+          },
+        });
+        print("User data stored successfully");
+      } else {
+        print("User is null");
+      }
+    } catch (error) {
+      print("Error storing user data: $error");
     }
   }
 }
+

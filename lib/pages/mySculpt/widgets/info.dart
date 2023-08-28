@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -255,8 +257,17 @@ class _InfoState extends State<Info> {
                     color: Colors.grey.withOpacity(0.3),
                   ),
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/mySculptSP"); // Add your track button's onPressed logic here
+                    onPressed: () async {
+                      String? gender = await fetchGender();
+                      if (gender != null && gender == "Male") {
+                        Navigator.pushNamed(context, "/mySculptSPMale");
+                      }
+                      else if (gender != null && gender == "Female"){
+                        Navigator.pushNamed(context, "/mySculptSP");
+                      }
+                      else{
+                        Navigator.pushNamed(context, "/home");
+                      }
                     },
                     style: TextButton.styleFrom(
                       primary: Colors.white,
@@ -275,7 +286,31 @@ class _InfoState extends State<Info> {
       ),
     );
   }
+
+  // Fetching Gender from Firestore
+  Future<String?> fetchGender() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('RegisteredUsers')
+          .doc(user!.uid).get();
+
+      if (userSnapshot.exists) {
+        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+        String? gender = userData['user_detail']['gender'];
+        print(gender);
+        return gender;
+      } else {
+        return null; // User document doesn't exist
+      }
+    } catch (e) {
+      print('Error fetching gender: $e');
+      return null;
+    }
+  } // End for Fetching Gender
+
 }
+
 
 class _StatsBox extends StatelessWidget {
   final Widget child;

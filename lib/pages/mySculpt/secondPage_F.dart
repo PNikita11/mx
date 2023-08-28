@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:the_metabolix_app/pages/screens/homepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; // Import this for File class
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+
+
 
 void main() {
   runApp(MyApp());
@@ -24,6 +32,10 @@ class TrackForm extends StatefulWidget {
 }
 
 class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMixin {
+
+  List<Map<String, dynamic>> selectedImages = [];  // Image List with Name to Uplaod in Firebase Storage
+  List<String> uploadedImageUrls = [];
+
   final List<TextEditingController> controllers = List.generate(
     15,
         (index) => TextEditingController(),
@@ -101,6 +113,95 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
     }
     super.dispose();
   }
+
+  void _storeFormDataInFirebase() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      String userId = user.uid;
+      // Get the current date
+      final DateTime currentDate = DateTime.now();
+
+      //Storing all the selected images and getting url
+      for (Map<String, dynamic> imageInfo in selectedImages) {
+        String imageUrl = await _uploadToFirebase(
+            imageInfo['imagePath'], imageInfo['imageName'], userId);
+        setState(() {
+          uploadedImageUrls.add(imageUrl);
+        });
+      }
+
+
+      // Format the date as a string (e.g., "2023-08-21")
+      final String formattedDate =
+          "${currentDate.year}-${currentDate.month.toString().padLeft(
+          2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
+
+      // Reference to the "user_metrics" collection
+      CollectionReference metricsCollection =
+      FirebaseFirestore.instance.collection('user_metrics');
+
+      // Create a map containing the form data
+      Map<String, dynamic> formData = {
+        formattedDate: {
+          'body_weight': controllers[0].text,
+          'waist_at_belly_button': controllers[1].text,
+          'hips_at_largest_circumference': controllers[2].text,
+          'thigh_at_largest_circumference': controllers[3].text,
+          'chest_at_largest_circumference': controllers[4].text,
+          'upper_arm_at_largest_circumference': controllers[5].text,
+          'face': controllers[6].text,
+          'calf': controllers[7].text,
+          'neck': controllers[8].text,
+          'waist_5_fingers_above_belly_button': controllers[9].text,
+          'last_periods_date': controllers[10].text,
+          "Submit Front Picture:": uploadedImageUrls.length > 0
+              ? uploadedImageUrls[0]
+              : 'none',
+          "Submit Back Picture:": uploadedImageUrls.length > 1
+              ? uploadedImageUrls[1]
+              : 'none',
+          "Submit Side Picture:": uploadedImageUrls.length > 2
+              ? uploadedImageUrls[2]
+              : 'none',
+          "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
+              ? uploadedImageUrls[3]
+              : 'none',
+        }
+      };
+
+      try {
+        await metricsCollection.doc(userId).set(formData);
+      } catch (e) {
+        showerror(context, e.toString());
+      }
+
+    }
+  }
+
+
+  // Image upload to Firebase Storage
+  Future<String> _uploadToFirebase(String imagePath, String imageName, String uid) async {
+    DateTime currentDate = DateTime.now();
+    String date =
+        "${currentDate.year}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
+    try {
+      final firebaseStorageRef =
+      firebase_storage.FirebaseStorage.instance.ref(uid).child(date).child(imageName + '.jpg');
+      final uploadTask = firebaseStorageRef.putFile(File(imagePath));
+      await uploadTask;
+      // Get download URL
+      String imageUrl = await firebaseStorageRef.getDownloadURL();
+      return imageUrl;
+    } catch(e){
+      showerror(context, e.toString());
+      return "NULL" ;
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +283,13 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
               opacity: _fadeIn,
               child: FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/mySculptLR"); // Add your submit button onPressed logic here
+                  if(check_empty()){
+                    _storeFormDataInFirebase();
+                    Navigator.pushNamed(context, "/mySculptLR"); // Add your submit button onPressed logic here
+                  }
+                  else {
+                    showerror(context, "Please Fill all the Details.");
+                  }
                 },
                 child: Icon(Icons.check),
               ),
@@ -282,7 +389,7 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
           else if (index >= 11 && index <= 14) // Show upload button for specified headings
             ElevatedButton(
               onPressed: () {
-                _showUploadOptions(context);
+                _showUploadOptions(context, index);
               },
               child: Container(
                 width: 180,
@@ -400,7 +507,8 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
     }
   }
 
-  void _showUploadOptions(BuildContext context) {
+  void _showUploadOptions(BuildContext context, int index)  {
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -410,28 +518,46 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text("Phone Camera"),
-                onTap: () {
-                  // Handle Phone Camera option here
-                  Navigator.pop(context);
-                },
+                  leading: Icon(Icons.camera_alt),
+                  title: Text("Phone Camera"),
+                  onTap: ()  async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image != null) {
+                      String imagePath = image.path;
+                      String imageName = generateImageName(index);
+                      setState(() {
+                        selectedImages.add({'imagePath': imagePath, 'imageName': imageName});
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("You have Selected $imageName"),
+                          ),
+                        );
+                      });
+                    }
+                    Navigator.pop(context);
+
+                  }
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text("Phone Gallery"),
-                onTap: () {
-                  // Handle Phone Gallery option here
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.folder),
-                title: Text("My Files"),
-                onTap: () {
-                  // Handle My Files option here
-                  Navigator.pop(context);
-                },
+                  leading: Icon(Icons.photo_library),
+                  title: Text("Phone Gallery"),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      String imagePath = image.path;
+                      String imageName = generateImageName(index);
+                      setState(() {
+                        selectedImages.add({'imagePath': imagePath, 'imageName': imageName});
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("You have Selected $imageName"),
+                          ),
+                        );
+                      });
+                    }
+                    Navigator.pop(context);
+                  }
+
               ),
             ],
           ),
@@ -439,7 +565,52 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
       },
     );
   }
+
+  // Getting Name of Image by Index
+  String generateImageName(int index) {
+    String baseName = '';
+    if (index == 11) {
+      baseName = 'Front_Image';
+    } else if (index == 12) {
+      baseName = 'Back_Image';
+    } else if (index == 13) {
+      baseName = 'Side_Image';
+    } else if (index == 14) {
+      baseName = 'Full_Image';
+    }
+    return baseName;
+  }
+
+  // Check for any empty values
+  bool check_empty() {
+    if (selectedImages.length != 4) {
+      return false;
+    }
+    return true;
+  }
 }
+
+// Show error
+void showerror(BuildContext context, String Msg) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Error'),
+      content: Text(Msg),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppBar appBar;

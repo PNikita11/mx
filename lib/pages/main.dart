@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:the_metabolix_app/pages/dietnary/firstpage.dart';
 import 'package:the_metabolix_app/pages/mealMap/pageFive.dart';
@@ -7,6 +8,7 @@ import 'package:the_metabolix_app/pages/mealMap/pageTwo.dart';
 import 'package:the_metabolix_app/pages/mySculpt/firstPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/loadingPage.dart';
 import 'package:the_metabolix_app/pages/mySculpt/secondPage_F.dart';
+import 'package:the_metabolix_app/pages/mySculpt/secondPage_M.dart';
 import 'package:the_metabolix_app/pages/mySculpt/thirdPage.dart';
 import 'package:the_metabolix_app/utils/routes.dart';
 import 'package:the_metabolix_app/pages/screens/splash.dart';
@@ -16,13 +18,23 @@ import 'package:the_metabolix_app/pages/screens/homepage.dart';
 
 import 'package:the_metabolix_app/pages/mealMap/pageOne.dart';
 
+import '../firebase_options.dart';
 
 
 
 
-void main() {
+
+
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(MyApp());
+
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -32,8 +44,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => FirstPage(),
-
         "/": (context) => SplashScreen(),
         MyRoutes.splashRoute: (context) => SplashScreen(),
         MyRoutes.loginRoute: (context) => MyLogin(),
@@ -41,6 +51,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.homeRoute: (context) => Home(),
         MyRoutes.mySculptFPRoute: (context) => DetailsPage(),
         MyRoutes.mySculptSPRoute: (context) => TrackForm(),
+        MyRoutes.mySculptSPMaleRoute: (context) => TrackForm_M(),
         MyRoutes.mySculptTPRoute: (context) => CongratulationsPage(),
         MyRoutes.mySculptloadRoute: (context) => LoadingPage(),
         MyRoutes.mealMapFPRoute: (context) => ProfileScreen(),
@@ -49,14 +60,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.mealMapFOPRoute: (context) => SnackListScreen(),
         MyRoutes.mealMapFIPRoute: (context) => DinnerListScreen(),
         MyRoutes.dietInaryFPRoute: (context) => FirstPage(),
-
-
       },
     );
   }
 }
-
-
-//hello world
-
-

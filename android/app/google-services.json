@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "124143393879",
+    "project_id": "metabolix-db",
+    "storage_bucket": "metabolix-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124143393879:android:5197473f7df60cbb425712",
+        "android_client_info": {
+          "package_name": "com.example.the_metabolix_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124143393879-b5itl8mlrng37cpendqud31tvgs124ve.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB08oYQHTooY8uDHrzAzWMuXt_rNUj46k8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124143393879-b5itl8mlrng37cpendqud31tvgs124ve.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
