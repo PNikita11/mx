@@ -7,10 +7,9 @@ class Graph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Flexible(
+    return const Expanded(
       child: SizedBox(
-        height: 300,
-        width: 380,
+        width: double.infinity,
         child: GraphArea(),
       ),
     );
@@ -43,9 +42,7 @@ class _GraphAreaState extends State<GraphArea>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2500),
-    );
+        vsync: this, duration: const Duration(milliseconds: 2500));
     _animationController.forward();
   }
 
@@ -61,10 +58,8 @@ class _GraphAreaState extends State<GraphArea>
       onTap: () {
         _animationController.forward(from: 0.0);
       },
-      child: SingleChildScrollView(
-        child: CustomPaint(
-          painter: GraphPainter(_animationController.view, data: data),
-        ),
+      child: CustomPaint(
+        painter: GraphPainter(_animationController.view, data: data),
       ),
     );
   }
@@ -79,13 +74,15 @@ class GraphPainter extends CustomPainter {
       : _size = Tween<double>(begin: 0, end: 1).animate(
     CurvedAnimation(
       parent: animation,
-      curve: const Interval(0.0, 0.75, curve: Curves.easeInOutCubicEmphasized),
+      curve: const Interval(0.0, 0.75,
+          curve: Curves.easeInOutCubicEmphasized),
     ),
   ),
         _dotSize = Tween<double>(begin: 0, end: 1).animate(
           CurvedAnimation(
             parent: animation,
-            curve: const Interval(0.75, 1, curve: Curves.easeInOutCubicEmphasized),
+            curve:
+            const Interval(0.75, 1, curve: Curves.easeInOutCubicEmphasized),
           ),
         ),
         super(repaint: animation);
