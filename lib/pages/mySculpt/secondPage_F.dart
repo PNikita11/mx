@@ -33,7 +33,8 @@ class TrackForm extends StatefulWidget {
 
 class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMixin {
 
-  List<Map<String, dynamic>> selectedImages = [];  // Image List with Name to Uplaod in Firebase Storage
+  List<Map<String, dynamic>> selectedImages = [
+  ]; // Image List with Name to Uplaod in Firebase Storage
   List<String> uploadedImageUrls = [];
 
   final List<TextEditingController> controllers = List.generate(
@@ -50,7 +51,8 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _fadeIn = Tween<double>(begin: 0.0, end: 1.5).animate(_controller);
 
     // Start the fade-in animation when the page loads
@@ -61,46 +63,48 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          backgroundColor: Colors.red,
-          title: Text(
-            "Your metrics will help shape your fitness journey.",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          content: Text(
-            "Make sure you submit accurate measurements. Cross-check all data you input before hitting the tick button.",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            Positioned(
-              top: 0.0,
-              right: 0.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.white,
+        builder: (BuildContext context) =>
+            AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              backgroundColor: Colors.red,
+              title: Text(
+                "Your metrics will help shape your fitness journey.",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              content: Text(
+                "Make sure you submit accurate measurements. Cross-check all data you input before hitting the tick button.",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
       );
     });
   }
@@ -120,8 +124,6 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
 
     if (user != null) {
       String userId = user.uid;
-      // Get the current date
-      final DateTime currentDate = DateTime.now();
 
       //Storing all the selected images and getting url
       for (Map<String, dynamic> imageInfo in selectedImages) {
@@ -133,7 +135,8 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
       }
 
 
-      // Format the date as a string (e.g., "2023-08-21")
+      // Get the current date
+      final DateTime currentDate = DateTime.now();
       final String formattedDate =
           "${currentDate.year}-${currentDate.month.toString().padLeft(
           2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
@@ -142,44 +145,95 @@ class _TrackFormState extends State<TrackForm> with SingleTickerProviderStateMix
       CollectionReference metricsCollection =
       FirebaseFirestore.instance.collection('user_metrics');
 
-      // Create a map containing the form data
-      Map<String, dynamic> formData = {
-        formattedDate: {
-          'body_weight': controllers[0].text,
-          'waist_at_belly_button': controllers[1].text,
-          'hips_at_largest_circumference': controllers[2].text,
-          'thigh_at_largest_circumference': controllers[3].text,
-          'chest_at_largest_circumference': controllers[4].text,
-          'upper_arm_at_largest_circumference': controllers[5].text,
-          'face': controllers[6].text,
-          'calf': controllers[7].text,
-          'neck': controllers[8].text,
-          'waist_5_fingers_above_belly_button': controllers[9].text,
-          'last_periods_date': controllers[10].text,
-          "Submit Front Picture:": uploadedImageUrls.length > 0
-              ? uploadedImageUrls[0]
-              : 'none',
-          "Submit Back Picture:": uploadedImageUrls.length > 1
-              ? uploadedImageUrls[1]
-              : 'none',
-          "Submit Side Picture:": uploadedImageUrls.length > 2
-              ? uploadedImageUrls[2]
-              : 'none',
-          "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
-              ? uploadedImageUrls[3]
-              : 'none',
+      // Check if the document with the current date already exists
+      DocumentReference documentRef = metricsCollection.doc(userId);
+      DocumentSnapshot documentSnapshot = await documentRef.get();
+
+      if (documentSnapshot.exists) {
+        // The document with the current date already exists
+        Map<String, dynamic> data =
+        documentSnapshot.data() as Map<String, dynamic>;
+
+        if (data.containsKey(formattedDate)) {
+          // Client is attempting to update data for the current day
+          showerror(context, "You have already submitted data for today.");
+        } else {
+          // Update data for the current day
+          data[formattedDate] = {
+            'body_weight': controllers[0].text,
+            'waist_at_belly_button': controllers[1].text,
+            'hips_at_largest_circumference': controllers[2].text,
+            'thigh_at_largest_circumference': controllers[3].text,
+            'chest_at_largest_circumference': controllers[4].text,
+            'upper_arm_at_largest_circumference': controllers[5].text,
+            'face': controllers[6].text,
+            'calf': controllers[7].text,
+            'neck': controllers[8].text,
+            'waist_5_fingers_above_belly_button': controllers[9].text,
+            'last_periods_date': controllers[10].text,
+            "Submit Front Picture:": uploadedImageUrls.length > 0
+                ? uploadedImageUrls[0]
+                : 'none',
+            "Submit Back Picture:": uploadedImageUrls.length > 1
+                ? uploadedImageUrls[1]
+                : 'none',
+            "Submit Side Picture:": uploadedImageUrls.length > 2
+                ? uploadedImageUrls[2]
+                : 'none',
+            "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
+                ? uploadedImageUrls[3]
+                : 'none',
+            // Add other fields here
+          };
+
+          try {
+            // Update the document with the modified data
+            await documentRef.set(data);
+            Navigator.pushNamed(context, "/mySculptLR");
+          } catch (e) {
+            showerror(context, e.toString());
+          }
         }
-      };
+      } else {
+        // The document with the current date doesn't exist, create it
+        Map<String, dynamic> formData = {
+          formattedDate: {
+            'body_weight': controllers[0].text,
+            'waist_at_belly_button': controllers[1].text,
+            'hips_at_largest_circumference': controllers[2].text,
+            'thigh_at_largest_circumference': controllers[3].text,
+            'chest_at_largest_circumference': controllers[4].text,
+            'upper_arm_at_largest_circumference': controllers[5].text,
+            'face': controllers[6].text,
+            'calf': controllers[7].text,
+            'neck': controllers[8].text,
+            'waist_5_fingers_above_belly_button': controllers[9].text,
+            'last_periods_date': controllers[10].text,
+            "Submit Front Picture:": uploadedImageUrls.length > 0
+                ? uploadedImageUrls[0]
+                : 'none',
+            "Submit Back Picture:": uploadedImageUrls.length > 1
+                ? uploadedImageUrls[1]
+                : 'none',
+            "Submit Side Picture:": uploadedImageUrls.length > 2
+                ? uploadedImageUrls[2]
+                : 'none',
+            "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
+                ? uploadedImageUrls[3]
+                : 'none',
+            // Add other fields here
+          }
+        };
 
-      try {
-        await metricsCollection.doc(userId).set(formData);
-      } catch (e) {
-        showerror(context, e.toString());
+        try {
+          await metricsCollection.doc(userId).set(formData);
+          Navigator.pushNamed(context, "/mySculptLR");
+        } catch (e) {
+          showerror(context, e.toString());
+        }
       }
-
     }
   }
-
 
   // Image upload to Firebase Storage
   Future<String> _uploadToFirebase(String imagePath, String imageName, String uid) async {

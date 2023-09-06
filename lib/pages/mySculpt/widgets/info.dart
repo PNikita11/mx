@@ -112,7 +112,7 @@ class MySculptTPPage extends StatelessWidget {
         title: Text('MySculpt TP Page'),
       ),
       body: Center(
-        child: Text('Welcome to MySculpt TP Page!'),
+        child: Info(),
       ),
     );
   }
@@ -220,13 +220,25 @@ class _InfoState extends State<Info> {
                   ),
                 ),
                 padding: const EdgeInsets.all(10),
-                child: Text(
-                  'Nikita... Its been a while you sent us your mySculpt body metrics! Its time to track your progress!!',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
+                child: FutureBuilder<String?>(
+                  future: fetchUsername(),
+                  builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error loading username');
+                    } else {
+                      final userUsername = snapshot.data ?? 'User';
+                      return Text(
+                        '$userUsername... It\'s been a while you sent us your mySculpt body metrics! It\'s time to track your progress!!',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 25),
@@ -237,6 +249,9 @@ class _InfoState extends State<Info> {
             child: Material(
               elevation: 5,
               shape: const CircleBorder(),
+
+
+
               child: Ink(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -261,11 +276,9 @@ class _InfoState extends State<Info> {
                       String? gender = await fetchGender();
                       if (gender != null && gender == "Male") {
                         Navigator.pushNamed(context, "/mySculptSPMale");
-                      }
-                      else if (gender != null && gender == "Female"){
+                      } else if (gender != null && gender == "Female") {
                         Navigator.pushNamed(context, "/mySculptSP");
-                      }
-                      else{
+                      } else {
                         Navigator.pushNamed(context, "/home");
                       }
                     },
@@ -287,16 +300,29 @@ class _InfoState extends State<Info> {
     );
   }
 
+  // Function to fetch the username
+  Future<String?> fetchUsername() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      // If a user is logged in, return their display name
+      return currentUser.displayName;
+    } else {
+      return null; // Return null if no user is logged in
+    }
+  }
+
   // Fetching Gender from Firestore
   Future<String?> fetchGender() async {
     User? user = FirebaseAuth.instance.currentUser;
     try {
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('RegisteredUsers')
-          .doc(user!.uid).get();
+          .doc(user!.uid)
+          .get();
 
       if (userSnapshot.exists) {
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> userData =
+        userSnapshot.data() as Map<String, dynamic>;
         String? gender = userData['user_detail']['gender'];
         print(gender);
         return gender;
@@ -308,9 +334,7 @@ class _InfoState extends State<Info> {
       return null;
     }
   } // End for Fetching Gender
-
 }
-
 
 class _StatsBox extends StatelessWidget {
   final Widget child;

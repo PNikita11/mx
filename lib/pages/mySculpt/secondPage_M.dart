@@ -119,8 +119,6 @@ class _TrackFormState extends State<TrackForm_M> with SingleTickerProviderStateM
 
     if (user != null) {
       String userId = user.uid;
-      // Get the current date
-      final DateTime currentDate = DateTime.now();
 
       //Storing all the selected images and getting url
       for (Map<String, dynamic> imageInfo in selectedImages) {
@@ -132,52 +130,104 @@ class _TrackFormState extends State<TrackForm_M> with SingleTickerProviderStateM
       }
 
 
-      // Format the date as a string (e.g., "2023-08-21")
+      // Get the current date
+      final DateTime currentDate = DateTime.now();
       final String formattedDate =
-          "${currentDate.year}-${currentDate.month.toString().padLeft(
-          2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
-
+          "${currentDate.year}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
 
       // Reference to the "user_metrics" collection
       CollectionReference metricsCollection =
       FirebaseFirestore.instance.collection('user_metrics');
 
-      // Create a map containing the form data
-      Map<String, dynamic> formData = {
-        formattedDate: {
-          'body_weight': controllers[0].text,
-          'waist_at_belly_button': controllers[1].text,
-          'hips_at_largest_circumference': controllers[2].text,
-          'thigh_at_largest_circumference': controllers[3].text,
-          'chest_at_largest_circumference': controllers[4].text,
-          'upper_arm_at_largest_circumference': controllers[5].text,
-          'face': controllers[6].text,
-          'calf': controllers[7].text,
-          'neck': controllers[8].text,
-          'waist_5_fingers_above_belly_button': controllers[9].text,
-          "Submit Front Picture:": uploadedImageUrls.length > 0
-              ? uploadedImageUrls[0]
-              : 'none',
-          "Submit Back Picture:": uploadedImageUrls.length > 1
-              ? uploadedImageUrls[1]
-              : 'none',
-          "Submit Side Picture:": uploadedImageUrls.length > 2
-              ? uploadedImageUrls[2]
-              : 'none',
-          "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
-              ? uploadedImageUrls[3]
-              : 'none',
+      // Check if the document with the current date already exists
+      DocumentReference documentRef = metricsCollection.doc(userId);
+      DocumentSnapshot documentSnapshot = await documentRef.get();
+
+      if (documentSnapshot.exists) {
+        // The document with the current date already exists
+        Map<String, dynamic> data =
+        documentSnapshot.data() as Map<String, dynamic>;
+
+        if (data.containsKey(formattedDate)) {
+          // Client is attempting to update data for the current day
+          showerror(context, "You have already submitted data for today.");
+        } else {
+          // Update data for the current day
+          data[formattedDate] = {
+            'body_weight': controllers[0].text,
+            'waist_at_belly_button': controllers[1].text,
+            'hips_at_largest_circumference': controllers[2].text,
+            'thigh_at_largest_circumference': controllers[3].text,
+            'chest_at_largest_circumference': controllers[4].text,
+            'upper_arm_at_largest_circumference': controllers[5].text,
+            'face': controllers[6].text,
+            'calf': controllers[7].text,
+            'neck': controllers[8].text,
+            'waist_5_fingers_above_belly_button': controllers[9].text,
+            "Submit Front Picture:": uploadedImageUrls.length > 0
+                ? uploadedImageUrls[0]
+                : 'none',
+            "Submit Back Picture:": uploadedImageUrls.length > 1
+                ? uploadedImageUrls[1]
+                : 'none',
+            "Submit Side Picture:": uploadedImageUrls.length > 2
+                ? uploadedImageUrls[2]
+                : 'none',
+            "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
+                ? uploadedImageUrls[3]
+                : 'none',
+            // Add other fields here
+          };
+
+          try {
+            // Update the document with the modified data
+            await documentRef.set(data);
+            Navigator.pushNamed(context, "/mySculptLR");
+          } catch (e) {
+            showerror(context, e.toString());
+          }
         }
-      };
+      } else {
+        // The document with the current date doesn't exist, create it
+        Map<String, dynamic> formData = {
+          formattedDate: {
+            'body_weight': controllers[0].text,
+            'waist_at_belly_button': controllers[1].text,
+            'hips_at_largest_circumference': controllers[2].text,
+            'thigh_at_largest_circumference': controllers[3].text,
+            'chest_at_largest_circumference': controllers[4].text,
+            'upper_arm_at_largest_circumference': controllers[5].text,
+            'face': controllers[6].text,
+            'calf': controllers[7].text,
+            'neck': controllers[8].text,
+            'waist_5_fingers_above_belly_button': controllers[9].text,
+            "Submit Front Picture:": uploadedImageUrls.length > 0
+                ? uploadedImageUrls[0]
+                : 'none',
+            "Submit Back Picture:": uploadedImageUrls.length > 1
+                ? uploadedImageUrls[1]
+                : 'none',
+            "Submit Side Picture:": uploadedImageUrls.length > 2
+                ? uploadedImageUrls[2]
+                : 'none',
+            "Submit Full Picture: (casual wear)": uploadedImageUrls.length > 3
+                ? uploadedImageUrls[3]
+                : 'none',
+            // Add other fields here
+          }
+        };
 
-      try {
-        await metricsCollection.doc(userId).set(formData);
-      } catch (e) {
-        showerror(context, e.toString());
+        try {
+          await metricsCollection.doc(userId).set(formData);
+          Navigator.pushNamed(context, "/mySculptLR");
+        } catch (e) {
+          showerror(context, e.toString());
+        }
       }
-
     }
   }
+
+
 
   // Image upload to Firebase Storage
   Future<String> _uploadToFirebase(String imagePath, String imageName, String uid) async {

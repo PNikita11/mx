@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_metabolix_app/pages/screens/forgetpage/ForgetPasswordMailScreen.dart';
+
+
+
 
 import 'homepage.dart';
 
@@ -182,7 +186,46 @@ class _MyLoginState extends State<MyLogin> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                              builder: (context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black, // Set the background color
+                                  ),
+                                  padding: EdgeInsets.all(70.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Make Selection!",style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold , color: Colors.white)), // Replace with your desired color,
+                                      SizedBox(height: 20), // Add some vertical spacing between the texts
+                                      Text("Select the Email options is given to reset your password ",style:  TextStyle(fontSize: 21,color: Colors.white)),
+                                      const SizedBox(height: 30.0,),
+                                      ForgetPasswordBtnWidget(
+                                        btnIcon: Icons.mail_outline_rounded,
+                                        title: "E-Mail",
+                                        subTitle: "Reset Via Email",
+                                        onTap: ()
+                                        {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ForgetPasswordMailScreen(), // Replace with the ForgetPasswordMailScreen widget
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  // Add your content here
+                                );
+                              },
+                            );
+                          },
+
+
                           child: const Text(
                             'Forgot Password',
                             style: TextStyle(
@@ -272,4 +315,47 @@ class _MyLoginState extends State<MyLogin> {
     }
   }
 
+}
+
+class ForgetPasswordBtnWidget extends StatelessWidget {
+  final IconData btnIcon;
+  final String title;
+  final String subTitle;
+  final Null Function() onTap;
+
+  const ForgetPasswordBtnWidget({
+    required this.btnIcon,
+    required this.title,
+    required this.subTitle,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.deepPurpleAccent
+        ),
+        child: Row(
+          children: [
+            Icon(btnIcon, size: 60.0),
+            const SizedBox(width: 10.0,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold , color: Colors.black)), // Replace with your desired color,
+                SizedBox(height: 5), // Add some vertical spacing between the texts
+                Text(subTitle,style:  TextStyle(fontSize: 18,color: Colors.black)),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

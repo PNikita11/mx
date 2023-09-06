@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -455,13 +456,20 @@ class CarouselWidget extends StatelessWidget {
     );
   }
 }
-
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    // Retrieve the user's username from Firebase Authentication
+    String? userUsername = FirebaseAuth.instance.currentUser?.displayName;
+
+    // Perform a null check for the username
+    if (userUsername == null) {
+      userUsername = 'User';
+    }
 
     return Scaffold(
       appBar: MainAppBar(appBar: AppBar(title: Text(''))),
@@ -509,7 +517,7 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Hello, Omkar! What's at the food table today?",
+                  "Hello, $userUsername! What's at the food table today?",
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 17.81,
@@ -544,7 +552,6 @@ class ProfileScreen extends StatelessWidget {
         child: Text(
           'TRACKERPAD',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28),
-
         ),
         style: ElevatedButton.styleFrom(
           primary: Colors.indigo,
